@@ -10,7 +10,8 @@ void SoftwareSerial::write(byte byte){
 
 }
 char SoftwareSerial::read(){
-
+	return 0;
 }
 int SoftwareSerial::available(){
+	return 0;
 }
