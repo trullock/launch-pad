@@ -5,6 +5,7 @@
 #include "state-machine.h"
 #include "IContinuityTester.h"
 #include "IFiringMechanism.h"
+#include "IStateObserver.h"
 
 #define Command_Arm 'A'
 #define Command_Disarm 'D'
@@ -24,20 +25,26 @@
 
 class Controller {
 	public:
-		Controller(ICommChannel *c, StateMachine *s, IContinuityTester* ct, IFiringMechanism* fm);
+		Controller(ICommChannel *c, StateMachine *s, IContinuityTester* ct, IFiringMechanism* fm, IStateObserver* so);
 		void loop(unsigned long millis);
 	private:
 		ICommChannel* comms;
 		StateMachine* state;
 		IContinuityTester* continuityTester;
 		IFiringMechanism* firingMechanism;
+		IStateObserver* stateObserver;
+
 		void arm();
 		void disarm();
 		void testContinuity();
 		void fire();
 		void timeout();
 		void handleCommand(char command);
+
+		bool checkInterlocked();
+		bool checkSaftey();
 		bool haveTimedOut(char command, unsigned long millis);
+
 		unsigned long lastCommandMillis;
 };
 

@@ -6,11 +6,13 @@
 class TestFiringMechanism : public IFiringMechanism
 {
 public:
+	TestFiringMechanism();
 	~TestFiringMechanism() { };
 	virtual void fire();
 	virtual void stopFiring ();
 	void reset();
 	bool wasFired;
+	bool wasStopped;
 };
 
 #endif

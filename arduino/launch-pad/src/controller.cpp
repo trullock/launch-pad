@@ -1,12 +1,14 @@
 #include "controller.h"
 
 
-Controller::Controller(ICommChannel* c, StateMachine* s, IContinuityTester* ct, IFiringMechanism* fm)
+Controller::Controller(ICommChannel* c, StateMachine* s, IContinuityTester* ct, IFiringMechanism* fm, IStateObserver* so)
 {
 	comms = c;
 	state = s;
 	continuityTester = ct;
 	firingMechanism = fm;
+	stateObserver = so;
+
 	lastCommandMillis = 0;
 }
 
@@ -60,8 +62,31 @@ void Controller::handleCommand(char command)
 	}
 }
 
+bool Controller::checkSaftey()
+{
+	if(state->getState() != State_Firing && stateObserver->firingMechanismEngaged())
+	{
+		disarm();
+		return false;
+	}
+}
+
+bool Controller::checkInterlocked()
+{
+	if (stateObserver->interlockEngaged())
+		return true;
+
+	disarm();
+	comms->write(Response_InvalidCommand);
+	// interlock not engaged
+	return false;
+}
+
 void Controller::arm()
 {
+	if(!checkInterlocked())
+		return;
+
 	if(state->arm())
 		comms->write(Response_Armed);
 	else
@@ -70,6 +95,8 @@ void Controller::arm()
 
 void Controller::disarm()
 {
+	firingMechanism->stopFiring();
+
 	if(state->disarm())
 		comms->write(Response_Disarmed);
 	else
@@ -78,12 +105,15 @@ void Controller::disarm()
 
 void Controller::timeout()
 {
-	comms->write(Response_Timeout);
 	disarm();
+	comms->write(Response_Timeout);
 }
 
 void Controller::testContinuity()
 {
+	if (!checkInterlocked())
+		return;
+
 	if(!state->canTestContinuity())
 	{
 		state->disarm();
@@ -110,6 +140,9 @@ void Controller::testContinuity()
 
 void Controller::fire()
 {
+	if (!checkInterlocked())
+		return;
+
 	if(!state->fire())
 	{
 		state->disarm();

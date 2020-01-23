@@ -11,6 +11,7 @@ public:
 
 	void pushData(int);
 	void reset();
+	void println(char c);
 
 private:
 	int buffer[16];

@@ -1,4 +1,5 @@
 #include "firing-mechanism.h"
+#include <arduino.h>
 
 #define FiringWritePin 10
 

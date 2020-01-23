@@ -5,7 +5,7 @@
 #include "../../mocks/test-state-observer.h"
 #include "../../../src/controller.h"
 
-TEST_CASE("Test Continuity") {
+TEST_CASE("Disarming") {
 
 	TestCommChannel comms;
 	TestContinuityTester continuityTester;
@@ -21,73 +21,70 @@ TEST_CASE("Test Continuity") {
 	firingMechanism.reset();
 	stateObserver.setInterlockEngaged(true);
 
-	SECTION("Disallowed Continuity Test Should Disarm System")
+	SECTION("Disarm after Arm should disarm state and force cease-fire")
 	{
-		comms.pushReadChar(Command_TestContinuity);
+		comms.pushReadChar(Command_Arm);
 		controller.loop(0);
+
+		comms.pushReadChar(Command_Disarm);
+		controller.loop(1);
+
+		REQUIRE(state.getState() == State_Ready);
+
+		// flush
+		for (int i = 0; i < 16; i++)
+			controller.loop(0);
 
 		REQUIRE(continuityTester.wasTested == false);
-		REQUIRE(comms.getWrittenChar() == Response_InvalidCommand);
-
-		REQUIRE(state.getState() == State_Ready);
-
-		// flush
-		for (int i = 0; i < 16; i++)
-			controller.loop(0);
-
 		REQUIRE(firingMechanism.wasFired == false);
+		REQUIRE(firingMechanism.wasStopped == true);
 	}
 
-	SECTION("Continuity Fail Shouldnt Allow Firing")
+	SECTION("Disarm after Arm+ContinuityTest should disarm state and force cease-fire")
 	{
-		// set continuity fail result
-		continuityTester.setResult(false);
-
 		comms.pushReadChar(Command_Arm);
 		controller.loop(0);
 
-		REQUIRE(comms.getWrittenChar() == Response_Armed);
-
 		comms.pushReadChar(Command_TestContinuity);
-		controller.loop(0);
+		controller.loop(10);
 
-		REQUIRE(continuityTester.wasTested == true);
-		REQUIRE(comms.getWrittenChar() == Response_ContinuityFailed);
-
-		comms.pushReadChar(Command_Fire);
-		controller.loop(0);
-
-		REQUIRE(comms.getWrittenChar() == Response_InvalidCommand);
+		comms.pushReadChar(Command_Disarm);
+		controller.loop(20);
 
 		REQUIRE(state.getState() == State_Ready);
 
 		// flush
 		for (int i = 0; i < 16; i++)
-			controller.loop(0);
+			controller.loop(21 + i);
 
+		REQUIRE(continuityTester.wasTested == true);
 		REQUIRE(firingMechanism.wasFired == false);
+		REQUIRE(firingMechanism.wasStopped == true);
 	}
 
-	SECTION("Arm + Continuity Pass Should Allow Firing")
+	SECTION("Disarm during Fire should disarm state and force cease-fire")
 	{
-		// set continuity fail result
+		comms.pushReadChar(Command_Arm);
+		controller.loop(0);
+
+		comms.pushReadChar(Command_TestContinuity);
 		continuityTester.setResult(true);
-
-		comms.pushReadChar(Command_Arm);
-		controller.loop(0);
-
-		REQUIRE(comms.getWrittenChar() == Response_Armed);
-
-		comms.pushReadChar(Command_TestContinuity);
-		controller.loop(0);
-
-		REQUIRE(continuityTester.wasTested == true);
-		REQUIRE(comms.getWrittenChar() == Response_ContinuityPassed);
+		controller.loop(10);
 
 		comms.pushReadChar(Command_Fire);
-		controller.loop(0);
+		controller.loop(20);
 
-		REQUIRE(comms.getWrittenChar() == Response_Firing);
+		comms.pushReadChar(Command_Disarm);
+		controller.loop(21); // 1ms is less than the firing duration
+
+		REQUIRE(state.getState() == State_Ready);
+
+		// flush
+		for (int i = 0; i < 16; i++)
+			controller.loop(22 + i);
+
+		REQUIRE(continuityTester.wasTested == true);
 		REQUIRE(firingMechanism.wasFired == true);
+		REQUIRE(firingMechanism.wasStopped == true);
 	}
 }

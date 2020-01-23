@@ -34,4 +34,5 @@ char UsbCommChannel::read()
 
 void UsbCommChannel::write(char data)
 {
+	Serial.println(data);
 }

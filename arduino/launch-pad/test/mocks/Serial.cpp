@@ -25,6 +25,11 @@ void Serial_::pushData(int data){
 	bufferSize++;
 }
 
+void Serial_::println(char c)
+{
+	// NIE
+}
+
 void Serial_::reset()
 {
 	bufferIndex = 0;

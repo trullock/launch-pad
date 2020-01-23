@@ -1,4 +1,5 @@
 #include "continuity-tester.h"
+#include <arduino.h>
 
 #define ContinuityWritePin 10
 #define ContinuityReadPin 11

@@ -7,14 +7,12 @@ Controller* controller;
 
 void setup()
 {
-
 	ICommChannel* comms = new UsbCommChannel();
 	IContinuityTester* continuityTester = new ContinuityTester();
 	IFiringMechanism* firingMechanism = new FiringMechanism();
 	StateMachine* stateMachine = new StateMachine();
 
 	controller = new Controller(comms, stateMachine, continuityTester, firingMechanism);
-
 }
 
 void loop()
