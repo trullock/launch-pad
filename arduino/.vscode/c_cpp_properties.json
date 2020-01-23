@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\Users\\Andrew Bullock\\Documents\\Arduino\\libraries\\TimerOne",
+                "${workspaceFolder}/test/mocks/**",
+                "C:\\Users\\Andrew Bullock\\Documents\\Arduino\\libraries\\**",
+                "C:\\Arduino\\tools\\**",
+                "C:\\Arduino\\hardware\\arduino\\avr\\**",
+                "C:\\Arduino\\hardware\\tools\\avr\\**",
+                "C:\\Arduino\\hardware\\tools\\avr\\avr\\include\\**",
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/libraries/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "USBCON"
+            ],
+            "windowsSdkVersion": "10.0.17763.0",
+            "compilerPath": "C:/mingw-w64/i686-8.1.0-posix-dwarf-rt_v6-rev0/mingw32/bin/g++.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64",
+            "forcedInclude": [
+                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
+            ]
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,7 @@
+{
+    "board": "arduino:avr:uno",
+    "path": "C:/Arduino",
+    "sketch": "launch-pad.ino",
+    "port": "COM4",
+    "output": "build"
+}
