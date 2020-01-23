@@ -1,7 +1,9 @@
 #ifndef FiringMechanism_h
 #define FiringMechanism_h
 
-class FiringMechanism
+#include "IFiringMechanism.h"
+
+class FiringMechanism : public IFiringMechanism
 {
 public:
 	FiringMechanism();
