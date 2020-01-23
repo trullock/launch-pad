@@ -21,7 +21,7 @@ TEST_CASE("Test Continuity") {
 	SECTION("Disallowed Continuity Test Should Disarm System")
 	{
 		comms.pushReadChar(Command_TestContinuity);
-		controller.loop();
+		controller.loop(0);
 
 		REQUIRE(continuityTester.wasTested == false);
 		REQUIRE(comms.getWrittenChar() == Response_InvalidCommand);
@@ -30,7 +30,7 @@ TEST_CASE("Test Continuity") {
 
 		// flush
 		for (int i = 0; i < 100; i++)
-			controller.loop();
+			controller.loop(0);
 
 		REQUIRE(firingMechanism.wasFired == false);
 	}
@@ -41,18 +41,18 @@ TEST_CASE("Test Continuity") {
 		continuityTester.setResult(false);
 
 		comms.pushReadChar(Command_Arm);
-		controller.loop();
+		controller.loop(0);
 
 		REQUIRE(comms.getWrittenChar() == Response_Armed);
 
 		comms.pushReadChar(Command_TestContinuity);
-		controller.loop();
+		controller.loop(0);
 
 		REQUIRE(continuityTester.wasTested == true);
 		REQUIRE(comms.getWrittenChar() == Response_ContinuityFailed);
 
 		comms.pushReadChar(Command_Fire);
-		controller.loop();
+		controller.loop(0);
 
 		REQUIRE(comms.getWrittenChar() == Response_InvalidCommand);
 
@@ -60,7 +60,7 @@ TEST_CASE("Test Continuity") {
 
 		// flush
 		for (int i = 0; i < 100; i++)
-			controller.loop();
+			controller.loop(0);
 
 		REQUIRE(firingMechanism.wasFired == false);
 	}
@@ -71,18 +71,18 @@ TEST_CASE("Test Continuity") {
 		continuityTester.setResult(true);
 
 		comms.pushReadChar(Command_Arm);
-		controller.loop();
+		controller.loop(0);
 
 		REQUIRE(comms.getWrittenChar() == Response_Armed);
 
 		comms.pushReadChar(Command_TestContinuity);
-		controller.loop();
+		controller.loop(0);
 
 		REQUIRE(continuityTester.wasTested == true);
 		REQUIRE(comms.getWrittenChar() == Response_ContinuityPassed);
 
 		comms.pushReadChar(Command_Fire);
-		controller.loop();
+		controller.loop(0);
 
 		REQUIRE(comms.getWrittenChar() == Response_Firing);
 		REQUIRE(firingMechanism.wasFired == true);
