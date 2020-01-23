@@ -13,7 +13,8 @@
 #define Command_Fire 'F'
 
 #define Response_InvalidCommand 'I'
-#define Response_Error 'I'
+#define Response_InvalidState 'S'
+#define Response_Error 'E'
 #define Response_Armed 'A'
 #define Response_Disarmed 'D'
 #define Response_ContinuityFailed 'N'
@@ -41,8 +42,7 @@ class Controller {
 		void timeout();
 		void handleCommand(char command);
 
-		bool checkInterlocked();
-		bool checkSaftey();
+		void checkState();
 		bool haveTimedOut(char command, unsigned long millis);
 
 		unsigned long lastCommandMillis;
