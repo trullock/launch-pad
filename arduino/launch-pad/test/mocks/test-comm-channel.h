@@ -9,6 +9,7 @@ public:
 	void pushReadChar(char c);
 	void write(char data);
 	char getWrittenChar();
+	char getLastChar();
 	void reset();
 	
 private:

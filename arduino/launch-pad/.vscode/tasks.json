@@ -19,7 +19,8 @@
                 //"-IC:/Arduino/hardware/tools/avr/avr/include",
                 //"-IC:/Arduino/hardware/arduino/avr/variants/standard",
                 "test/mocks/*.cpp",
-                "test/tests/*.cpp"
+				"test/tests/*.cpp",
+				"test/tests/controller-specs/*.cpp"
             ],
             "group": {
                 "kind": "build",

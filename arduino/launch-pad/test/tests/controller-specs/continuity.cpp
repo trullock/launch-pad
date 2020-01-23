@@ -1,8 +1,8 @@
-#include "../catch.h"
-#include "../mocks/test-comm-channel.h"
-#include "../mocks/test-continuity-tester.h"
-#include "../mocks/test-firing-mechanism.h"
-#include "../../src/controller.h"
+#include "../../catch.h"
+#include "../../mocks/test-comm-channel.h"
+#include "../../mocks/test-continuity-tester.h"
+#include "../../mocks/test-firing-mechanism.h"
+#include "../../../src/controller.h"
 
 TEST_CASE("Test Continuity") {
 
@@ -65,7 +65,7 @@ TEST_CASE("Test Continuity") {
 		REQUIRE(firingMechanism.wasFired == false);
 	}
 
-	SECTION("Continuity Pass Should Allow Firing")
+	SECTION("Arm + Continuity Pass Should Allow Firing")
 	{
 		// set continuity fail result
 		continuityTester.setResult(true);

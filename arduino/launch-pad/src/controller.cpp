@@ -1,21 +1,47 @@
 #include "controller.h"
 
+
 Controller::Controller(ICommChannel* c, StateMachine* s, IContinuityTester* ct, IFiringMechanism* fm)
 {
 	comms = c;
 	state = s;
 	continuityTester = ct;
 	firingMechanism = fm;
+	lastCommandMillis = 0;
 }
 
 void Controller::loop(unsigned long millis)
 {
-	char command = comms->read(); // then read in command
+	char command = comms->read();
+	if(command == 0)
+		return;
+	
+	if(haveTimedOut(command, millis)){
+		timeout();
+		return;
+	}
+
+	lastCommandMillis = millis;
+	handleCommand(command);
+}
+
+bool Controller::haveTimedOut(char command, unsigned long millis)
+{
 	switch (command)
 	{
-		case 0:
-			break;
+		case Command_TestContinuity:
+		case Command_Fire:
+			if (millis - lastCommandMillis >= CommandTimeoutMillis)
+				return true;
+	}
 
+	return false;
+}
+
+void Controller::handleCommand(char command)
+{
+	switch (command)
+	{
 		case Command_Arm:
 			arm();
 			break;
@@ -48,6 +74,12 @@ void Controller::disarm()
 		comms->write(Response_Disarmed);
 	else
 		comms->write(Response_InvalidCommand);
+}
+
+void Controller::timeout()
+{
+	comms->write(Response_Timeout);
+	disarm();
 }
 
 void Controller::testContinuity()

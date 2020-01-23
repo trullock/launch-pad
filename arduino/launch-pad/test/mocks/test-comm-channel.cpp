@@ -38,3 +38,8 @@ char TestCommChannel::getWrittenChar()
 {
 	return writeBuffer[writeReadIndex++];
 }
+
+char TestCommChannel::getLastChar()
+{
+	return writeBuffer[readWriteIndex];
+}

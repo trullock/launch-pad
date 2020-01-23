@@ -18,6 +18,9 @@
 #define Response_ContinuityFailed 'N'
 #define Response_ContinuityPassed 'C'
 #define Response_Firing 'F'
+#define Response_Timeout 'T'
+
+#define CommandTimeoutMillis 20 * 1000
 
 class Controller {
 	public:
@@ -32,6 +35,10 @@ class Controller {
 		void disarm();
 		void testContinuity();
 		void fire();
+		void timeout();
+		void handleCommand(char command);
+		bool haveTimedOut(char command, unsigned long millis);
+		unsigned long lastCommandMillis;
 };
 
 #endif
