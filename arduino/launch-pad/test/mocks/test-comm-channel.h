@@ -1,4 +1,4 @@
-#include "../../ICommChannel.h"
+#include "../../src/ICommChannel.h"
 
 class TestCommChannel : public ICommChannel
 {

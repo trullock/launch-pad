@@ -1,5 +1,5 @@
 #include "../catch.h"
-#include "../../usb-comm-channel.h"
+#include "../../src/usb-comm-channel.h"
 
 TEST_CASE("Reading from USB comm channel") {
   

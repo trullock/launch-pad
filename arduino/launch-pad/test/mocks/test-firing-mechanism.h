@@ -1,7 +1,7 @@
 #ifndef TestFiringMechanism_h
 #define TestFiringMechanism_h
 
-#include "../../IFiringMechanism.h"
+#include "../../src/IFiringMechanism.h"
 
 class TestFiringMechanism : public IFiringMechanism
 {

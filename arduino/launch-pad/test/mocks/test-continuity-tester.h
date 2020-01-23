@@ -1,4 +1,4 @@
-#include "../../continuity-tester.h"
+#include "../../src/continuity-tester.h"
 
 class TestContinuityTester : public IContinuityTester
 {

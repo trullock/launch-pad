@@ -2,7 +2,7 @@
 #include "../mocks/test-comm-channel.h"
 #include "../mocks/test-continuity-tester.h"
 #include "../mocks/test-firing-mechanism.h"
-#include "../../controller.h"
+#include "../../src/controller.h"
 
 TEST_CASE("Test Continuity") {
 

@@ -1,5 +1,5 @@
 #include "../catch.h"
-#include "../../state-machine.h"
+#include "../../src/state-machine.h"
 
 TEST_CASE("State Machine") {
 

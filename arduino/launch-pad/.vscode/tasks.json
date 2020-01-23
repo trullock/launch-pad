@@ -10,7 +10,7 @@
                 "-o",
                 "build/test",
                 "test/main.o",
-                "*.cpp",
+                "src/*.cpp",
                 "-include",
                 "test/mocks/arduino.h",
                 //"-Ilibraries/AES",
