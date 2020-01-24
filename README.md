@@ -1,8 +1,8 @@
 # Wireless Rocket Launch Pad
 
-This project is an Arduino based rocket launch controller, with remote (Remote) smartphone control app.
+This project is an Arduino based rocket launch controller, with remote smartphone control app (Remote).
 
-It is designed around saftey and redundancy. Fundamentally all parts of the system must work correctly or fail in a predictable (safe) way. Whereever possible, both hardware and software redundantly detect failures. The system is designed such that any 1 hardware component failure (i.e. going open circuit or short circuit - deemed IEC 61508 Occasional) must not be able to cause an ignition. There must be a minimum of two IEC 61508 Occasional or less-likely hardware or software failures for unintentional ignition to occur. A risk assessment of each component can be found below.
+It is designed around saftey and redundancy. Fundamentally all parts of the system must work correctly or fail in a predictable (safe) way. Whereever possible, both hardware and software redundantly detect failures. The system is designed such that any one component failure (i.e. going open circuit or short circuit - deemed IEC 61508 Occasional) must not be able to cause an ignition. There must be a minimum of two IEC 61508 Occasional or less-likely hardware or software failures for unintentional ignition to occur. A risk assessment of each component can be found below.
 
 ## Saftey by Design
 
@@ -48,11 +48,19 @@ There are two main concerns/rule-interpretations with this wireless, app-driven 
 2. "Removable" series launch-button interlock/key
 
 (1) Can be easily solved via commodity encrypted and/or paired radios.
+
 (2) Is probably more of a contentious point. My interpretation is that the wording of these saftey codes is legacy in its use of "physical" words, but very relevant and pertinent in its implications for saftey. 
+
 I think there are two points here:
 
 1. There should be a cermeony (inserting the key) which makes it obvious and unabiguous that you are entering firing mode. Mentally this is an intentional and deliberate action which you are hopefully doing after obeying all of the various other, previous setup saftey steps.
-2. The Firing mechanism should be "removable" or "disableable" so that it is difficult to accidentally trigger a Fire event. I argue that the virtual saftey-key measures designed into this system not only meet all of the above saftey criteria, but actaully go much further than most personal and club lauch systems.
+2. The Firing mechanism should be "removable" or "disableable" so that it is difficult to accidentally trigger a Fire event. 
+
+I argue that the virtual saftey-key measures designed into this system not only meet all of the above saftey criteria, but actaully go much further than most personal and club lauch systems.
+
+## State Management
+
+The Pad is the ultimate controller of state, managing exactly what mode it is in at any one time, and which states it is allowed to transition into. The Remote mirrors this logic, but the system is not reliant on the Remote to properly maintain and permit state transitions. The Pad is in constant communication with the Remote to tell it what state it is in. Should the Remote issue an invalid command the Pad protects against this. Any unexpected command received by the Pad casuse the Pad to disarm itself and revert back to its base Disarmed state.
 
 ## Funtional Overview
 
@@ -74,42 +82,42 @@ This section outlines the navigation of the state diagram above.
 ### Arming
 
 The system can only enter the Armed state if the physical Saftey Interlock is engaged at the Pad. 
-The system will remain in an Armed state for 20s, after which it will revert to a Disarmed state should it not receive a valid Continuity Test command beforehand.
+The system remains in an Armed state for 20s, after which it reverts to a Disarmed state should it not receive a valid Continuity Test command beforehand.
 When in an Armed state:
 
-* a physical indicator light at the pad will be illuminated (Armed)
-* a warning siren will sound at the pad
-* a virtual indicator will show on the Remote
-* the Remote will be allowed to issue a Disarm and/or Continuity Test command
+* a physical indicator light at the pad is illuminated (Armed)
+* a warning siren sounds at the pad
+* a virtual indicator is shown on the Remote
+* the Remote is allowed to issue a Disarm and/or Continuity Test command
 
 ### Performing a Continuity Test
 
 A continuity test of the electrical ignition system (Ignitor) can only be performed when the system is in an Armed state.
 A continuity test can only be performed from the Remote. For saftey there is no physical continuity test mechanism at the Pad.
-If the continuity test fails, the system will immedately revert to a Disarmed state.
-If the continuity test passes, the system will transition to the Continuity-Test-Passed state.
+If the continuity test fails, the system immedately reverts to a Disarmed state.
+If the continuity test passes, the system transitions to the Continuity-Test-Passed state.
 
 ### Continuity-Test-Passed
 
-The system will remain in an Continuity-Test-Passed state for 20s, after which it will revert to a Disarmed state should it not receive a valid Fire command beforehand.
+The system remains in an Continuity-Test-Passed state for 20s, after which it reverts to a Disarmed state should it not receive a valid Fire command beforehand.
 
 When in a Continuity-Test-Passed state:
 
-* a physical indicator light at the pad will be illuminated (Ready)
-* a warning siren will sound at the pad
-* a virtual indicator will show on the Remote
-* the Remote will be allowed to issue a Disarm and/or Fire command
+* a physical indicator light at the pad is illuminated (Ready)
+* a warning siren sounds at the pad
+* a virtual indicator is shown on the Remote
+* the Remote is allowed to issue a Disarm and/or Fire command
 
 ### Firing
 
 The system can only enter the Firing state from the Continuity-Test-Passed state.
-The system will remain in the Firing state for at most 3s. Whilst in the Firing state, a continuity-test will be performed to detect Ignitor ignition. Which ever occurs first (Ignitor continuity-failure or 3s elapsed) will trigger the system to disarm itself into the Disarmed state.
+The system remains in the Firing state for at most 3s. Whilst in the Firing state, a continuity-test is performed to detect Ignitor ignition. Which ever occurs first, Ignitor continuity-failure or 3s elapsed, triggers the system to disarm itself into the Disarmed state.
 Whilst in the Firing state:
 
-* a phsyical indicator light at the Pad will be illuminated (Firing)
-* a warning siren will sound at the Pad
-* a virtual indicator will show on the Remote
-* the Remote will be allowed to issue a Disarm command
+* a phsyical indicator light at the Pad is illuminated (Firing)
+* a warning siren sounds at the Pad
+* a virtual indicator is shown on the Remote
+* the Remote is allowed to issue a Disarm command
 
 ## State and Error Detection
 
@@ -118,14 +126,17 @@ Wherever possible, there are both hardware and software error detection and warn
 ### Physical Saftey Interlock
 
 A physical Saftey Interlock (key switch) at the Pad must be engaged before the system can leave the Disarmed state.
-Disengaging the Saftey Interlock will cause the system to instantly disarm itself into the Disarmed state.
+Disengaging the Saftey Interlock causes the system to instantly disarm itself into the Disarmed state.
+
 When the Saftey Interlock is engaged:
 
-* a physical indicator light at the pad will be illuminated (Engaged)
-* a virtual indicator will show on the Remote
-* the Remote will be allowed to issue an Arm command
+* a physical indicator light at the pad is illuminated (Engaged)
+* a virtual indicator is shown on the Remote
+* the Remote is allowed to issue an Arm command
 
 The two indications of Saftey Interlock Engagement (indicator light at the Pad and Remote indicator) are driven by separate electronics. The Engaged indicator at the Pad is driven directly from electrical components and does not rely on software. The Remote indicator is detected by software.
+
+Prior to engaging the Saftey Interlock, it is conceivable but IEC 61508 Remote that the firing relay is erroneously in a closed state. This is warned pre-engagement by an electronically controlled indicator light at the Pad, a software controlled warning siren at the Pad and a software controlled indicator on the Remote. See `Firing and Continuity Testing` below for further information.
 
 ### Armed and Continuity-Test-Passed States
 
@@ -133,13 +144,18 @@ These are software-only states and have no electronic or physical side effects e
 
 ### Firing and Continuity Testing
 
-The Firing mechanisms has multiple levels of failure saftey and redundancy to prevent accidental premature ignition.
+The Firing mechanism has multiple levels of failure saftey and redundancy to prevent accidental premature ignition.
 The relay is a DPDT. One of it's circuits is the 12V ignition system and the other is a 5V state-detection system. When the relay is closed unintentionally (either through software failure or hardware failure) the logic circuit should be closed, providing and indication to the software that the relay is in an unexpected state.
 
 When the relay is closed for any reason:
 * a Firing indictor light is illuminated at the Pad
 * a virtual Firing indicator is shown on the Remote
-* a warning siren will sound at the Pad
+* a warning siren sounds at the Pad
 
 When the relay is closed unexpectedly:
 * software detects this and disarms the system.
+
+As an additional level of redundancy, the software detection of the relay being closed is driven by the 12V system as well as the 5V system
+
+### Component Failure Risk Analysis
+
