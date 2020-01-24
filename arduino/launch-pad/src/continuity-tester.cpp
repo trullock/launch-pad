@@ -1,8 +1,8 @@
 #include "continuity-tester.h"
 #include <arduino.h>
 
-#define ContinuityWritePin 10
-#define ContinuityReadPin 11
+#define ContinuityWritePin 9
+#define ContinuityReadPin 8
 
 ContinuityTester::ContinuityTester()
 {

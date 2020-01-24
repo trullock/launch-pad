@@ -126,7 +126,7 @@ void Controller::testContinuity()
 {
 	if(!state->canTestContinuity())
 	{
-		state->disarm();
+		disarm();
 		comms->write(Response_InvalidCommand);
 		return;
 	}
@@ -139,12 +139,12 @@ void Controller::testContinuity()
 			return;
 		}
 
-		state->disarm();
+		disarm();
 		comms->write(Response_Error);
 		return;
 	}
 
-	state->disarm();
+	disarm();
 	comms->write(Response_ContinuityFailed);
 }
 
@@ -152,7 +152,7 @@ void Controller::fire()
 {
 	if(!state->fire())
 	{
-		state->disarm();
+		disarm();
 		comms->write(Response_InvalidCommand);
 		return;
 	}

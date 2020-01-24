@@ -27,6 +27,7 @@ TEST_CASE("Test Continuity") {
 		controller.loop(0);
 
 		REQUIRE(continuityTester.wasTested == false);
+		REQUIRE(comms.getWrittenChar() == Response_Disarmed);
 		REQUIRE(comms.getWrittenChar() == Response_InvalidCommand);
 
 		REQUIRE(state.getState() == State_Ready);
@@ -52,11 +53,13 @@ TEST_CASE("Test Continuity") {
 		controller.loop(0);
 
 		REQUIRE(continuityTester.wasTested == true);
+		REQUIRE(comms.getWrittenChar() == Response_Disarmed);
 		REQUIRE(comms.getWrittenChar() == Response_ContinuityFailed);
 
 		comms.pushReadChar(Command_Fire);
 		controller.loop(0);
 
+		REQUIRE(comms.getWrittenChar() == Response_Disarmed);
 		REQUIRE(comms.getWrittenChar() == Response_InvalidCommand);
 
 		REQUIRE(state.getState() == State_Ready);

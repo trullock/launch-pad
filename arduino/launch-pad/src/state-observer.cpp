@@ -1,8 +1,8 @@
 #include "state-observer.h"
 #include <arduino.h>
 
-#define InterlockEngagedReadPin 10
-#define FiringMechanismEngagedReadPin 11
+#define InterlockEngagedReadPin 7
+#define FiringMechanismEngagedReadPin 6
 
 StateObserver::StateObserver()
 {
