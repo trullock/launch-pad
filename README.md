@@ -163,5 +163,57 @@ As an additional level of redundancy, the software detection of the relay being 
 
 ![Circuit Diagram](schematic.png)
 
-## Component Failure Risk Analysis
+## Component Discussion and Failure Risk Analysis
 
+### LED1, R7
+
+This is the Firing indicator, showing that ignition-current is present at the ignitor.
+
+If these components fail, T2 et al provide redundant detection.
+
+### T2, D5, R6, R9
+
+These components enable software detection of Firing.
+
+If these components fail closed-circuit:
+* when software doesn't expect firing to be occurring: software will disarm the system.
+* when software does expect firing to be occurring: firing should be happening anyway, and normal Firing->Disarmed state transitioning will occur safely.
+
+If these components fail open-circuit, LED1 et al provide redundant detection.
+* when Firing occurs, software will detect that Firing does not appear to be happening (because of the fault) and will immediately cease attempting to fire, disarming itself.
+
+## LED2, R8
+
+This is the Interlock indicator, showing that the Interlock is engaged.
+If these components fail, T1 et al provide redundant detection.
+
+### T1, R3, R10
+
+These components enable software detection of Interlock engagement.
+If these components fail open-circuit, software will never allow firing.
+If these components fail closed-circuit, LED2 et al provide redundant detection.
+
+### T3, R1, R2
+
+These components initiate the Relay R1 to fire the ignitor.
+If these components fail causing the transistor to engage the firing relay, the Interlock must be engaged and the two Firing indicators ignored for unexpected ignition.
+
+### R4, R5, D2
+
+These components facilitate software continuity detection. Hardware continuity detection does not exist as Pad based continuity detection is deliberately not supported.
+
+If these components fail open-circuit, software will never consider there to be continuity and so will never enable firing.
+
+If these components fail closed-circuit, the Ardino cannot supply enough current to fire the ignitor.
+
+### RLY1
+
+This is the firing relay.
+If if fails so that it can never close, there is no risk of firing.
+If it fails so that is is unexpectedly closed, both the hardware and software Firing Indicators would be engaged to alert about the fault.
+
+### Regulator, Arduino, Radio
+
+If these components suffer a hardware failure, it is assumed that the worst-case occurs and 5V or 12V appear on the analog and digital pins.
+
+No single path exists for 12V being present on the Arduino's in/output pins to supply enough current to the ignitor without other additional component failures.
