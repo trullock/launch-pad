@@ -1,7 +1,7 @@
 #include "firing-mechanism.h"
 #include <arduino.h>
 
-#define FiringWritePin 10
+#define FiringWritePin 4
 
 FiringMechanism::FiringMechanism()
 {
@@ -11,10 +11,10 @@ FiringMechanism::FiringMechanism()
 
 void FiringMechanism::fire()
 {
-	digitalWrite(FiringWritePin, HIGH);
+	digitalWrite(FiringWritePin, LOW);
 }
 
 void FiringMechanism::stopFiring()
 {
-	digitalWrite(FiringWritePin, LOW);
+	digitalWrite(FiringWritePin, HIGH);
 }

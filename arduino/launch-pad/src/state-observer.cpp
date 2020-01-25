@@ -2,7 +2,7 @@
 #include <arduino.h>
 
 #define InterlockEngagedReadPin 7
-#define FiringMechanismEngagedReadPin 6
+#define FiringMechanismEngagedReadPin 8
 
 StateObserver::StateObserver()
 {

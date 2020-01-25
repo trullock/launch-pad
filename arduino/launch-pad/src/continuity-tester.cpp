@@ -2,7 +2,7 @@
 #include <arduino.h>
 
 #define ContinuityWritePin 9
-#define ContinuityReadPin 8
+#define ContinuityReadPin 10
 
 ContinuityTester::ContinuityTester()
 {

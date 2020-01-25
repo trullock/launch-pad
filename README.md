@@ -73,6 +73,8 @@ The system can be in one of 4 states at any one time;
 
 These stages must be entered into sequentially, as respresented by the below state diagram.
 
+![State Diagram](state-diagram.png)
+
 Note that this diagram does not detail the logic governing the permissability of any state transition, it simply describes the set of possible states and transitions between them.
 
 ## State Transitions and Logic
@@ -157,5 +159,9 @@ When the relay is closed unexpectedly:
 
 As an additional level of redundancy, the software detection of the relay being closed is driven by the 12V system as well as the 5V system
 
-### Component Failure Risk Analysis
+# Electronics
+
+![Circuit Diagram](schematic.png)
+
+## Component Failure Risk Analysis
 
