@@ -37,6 +37,7 @@
 			this.btnDisarm = new System.Windows.Forms.Button();
 			this.btnFire = new System.Windows.Forms.Button();
 			this.btnDisconnect = new System.Windows.Forms.Button();
+			this.btnClear = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -126,11 +127,22 @@
 			this.btnDisconnect.UseVisualStyleBackColor = true;
 			this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
 			// 
+			// btnClear
+			// 
+			this.btnClear.Location = new System.Drawing.Point(402, 384);
+			this.btnClear.Name = "btnClear";
+			this.btnClear.Size = new System.Drawing.Size(98, 51);
+			this.btnClear.TabIndex = 9;
+			this.btnClear.Text = "Clear";
+			this.btnClear.UseVisualStyleBackColor = true;
+			this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.btnClear);
 			this.Controls.Add(this.btnDisconnect);
 			this.Controls.Add(this.btnFire);
 			this.Controls.Add(this.btnDisarm);
@@ -159,6 +171,7 @@
 		private System.Windows.Forms.Button btnDisarm;
 		private System.Windows.Forms.Button btnFire;
 		private System.Windows.Forms.Button btnDisconnect;
+		private System.Windows.Forms.Button btnClear;
 	}
 }
 

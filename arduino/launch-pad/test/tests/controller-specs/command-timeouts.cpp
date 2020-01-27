@@ -21,6 +21,25 @@ TEST_CASE("Command Timeouts") {
 	firingMechanism.reset();
 	stateObserver.setInterlockEngaged(true);
 
+	SECTION("Timeout staying armed, system should be disarmed")
+	{
+		comms.pushReadChar(Command_Arm);
+		controller.loop(0);
+
+		REQUIRE(comms.getWrittenChar() == Response_Armed);
+
+
+		// flush
+		for (int i = 0; i < 16; i++)
+			controller.loop(CommandTimeoutMillis + i);
+
+		REQUIRE(comms.getWrittenChar() == Response_Disarmed);
+		REQUIRE(comms.getWrittenChar() == Response_Timeout);
+
+		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(firingMechanism.wasFired == false);
+	}
+
 	SECTION("Timeout between arm and continuity test should fail, system should be disarmed")
 	{
 		comms.pushReadChar(Command_Arm);

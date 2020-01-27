@@ -86,5 +86,10 @@ namespace Remote
 			if(port != null && port.IsOpen)
 				port.Close();
 		}
+
+		private void btnClear_Click(object sender, EventArgs e)
+		{
+			txtConsole.Text = string.Empty;
+		}
 	}
 }

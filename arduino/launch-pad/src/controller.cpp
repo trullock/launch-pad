@@ -10,31 +10,34 @@ Controller::Controller(ICommChannel* c, StateMachine* s, IContinuityTester* ct, 
 	stateObserver = so;
 
 	lastCommandMillis = 0;
+	firingStartedMillis = 0;
 }
 
 void Controller::loop(unsigned long millis)
 {
-	checkState();
+	checkState(millis);
+
+	if (haveTimedOut(millis))
+	{
+		timeout();
+		return;
+	}
 
 	char command = comms->read();
 	if(command == 0)
 		return;
 	
-	if(haveTimedOut(command, millis)){
-		timeout();
-		return;
-	}
-
-	lastCommandMillis = millis;
-	handleCommand(command);
+	handleCommand(command, millis);
 }
 
-bool Controller::haveTimedOut(char command, unsigned long millis)
+bool Controller::haveTimedOut(unsigned long millis)
 {
-	switch (command)
+	char currentState = state->getState();
+	switch (currentState)
 	{
-		case Command_TestContinuity:
-		case Command_Fire:
+		case State_Armed:
+		case State_ContinuityPassed:
+		case State_Firing:
 			if (millis - lastCommandMillis >= CommandTimeoutMillis)
 				return true;
 	}
@@ -42,8 +45,10 @@ bool Controller::haveTimedOut(char command, unsigned long millis)
 	return false;
 }
 
-void Controller::handleCommand(char command)
+void Controller::handleCommand(char command, unsigned long millis)
 {
+	lastCommandMillis = millis;
+
 	switch (command)
 	{
 		case Command_Arm:
@@ -59,12 +64,12 @@ void Controller::handleCommand(char command)
 			break;
 
 		case Command_Fire:
-			fire();
+			fire(millis);
 			break;
 	}
 }
 
-void Controller::checkState()
+void Controller::checkState(unsigned long millis)
 {
 	char currentState = state->getState();
 
@@ -82,11 +87,33 @@ void Controller::checkState()
 		}
 	}
 
+	// check interlock status
+	switch (currentState)
+	{
+	case State_ContinuityPassed:
+	case State_Firing:
+		if (!continuityTester->test())
+		{
+			disarm();
+			comms->write(Response_InvalidState);
+			// interlock not engaged
+		}
+	}
+
 	if (currentState != State_Firing && stateObserver->firingMechanismEngaged())
 	{
 		disarm();
 		comms->write(Response_InvalidState);
 		// firing when we shouldnt be
+	}
+
+	if(currentState == State_Firing)
+	{
+		if(firingStartedMillis + FireDurationMillis <= millis)
+		{
+			disarm();
+			// finished firing
+		}
 	}
 }
 
@@ -148,7 +175,7 @@ void Controller::testContinuity()
 	comms->write(Response_ContinuityFailed);
 }
 
-void Controller::fire()
+void Controller::fire(unsigned long millis)
 {
 	if(!state->fire())
 	{
@@ -157,6 +184,7 @@ void Controller::fire()
 		return;
 	}
 
+	firingStartedMillis = millis;
 	firingMechanism->fire();
 	comms->write(Response_Firing);
 }

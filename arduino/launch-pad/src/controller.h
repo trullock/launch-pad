@@ -23,6 +23,7 @@
 #define Response_Timeout 'T'
 
 #define CommandTimeoutMillis 20 * 1000
+#define FireDurationMillis 3 * 1000
 
 class Controller {
 	public:
@@ -38,14 +39,15 @@ class Controller {
 		void arm();
 		void disarm();
 		void testContinuity();
-		void fire();
+		void fire(unsigned long millis);
 		void timeout();
-		void handleCommand(char command);
+		void handleCommand(char command, unsigned long millis);
 
-		void checkState();
-		bool haveTimedOut(char command, unsigned long millis);
+		void checkState(unsigned long millis);
+		bool haveTimedOut(unsigned long millis);
 
 		unsigned long lastCommandMillis;
+		unsigned long firingStartedMillis;
 };
 
 #endif

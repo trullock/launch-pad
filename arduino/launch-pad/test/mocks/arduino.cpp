@@ -13,6 +13,12 @@ int digitalRead(int pin)
 	return -1;
 }
 
+int analogRead(int pin)
+{
+	return -1;
+}
+
+
 void delay(int duration){
     // noop
 }
