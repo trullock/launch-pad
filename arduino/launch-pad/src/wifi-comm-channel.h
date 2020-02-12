@@ -9,11 +9,10 @@
 #define Wifi_State_Disconnected 0
 #define Wifi_State_Connecting 1
 #define Wifi_State_Connected 2
-#define Wifi_State_Beaconing 3
-#define Wifi_State_TcpConnected 4
 
 #define Wifi_Beacon_Interval_Millis 1000
 #define Wifi_Connecting_TimeoutMillis 5000
+#define Wifi_Tcp_Connection_TimeoutMillis 5000
 
 class WifiCommChannel : public ICommChannel {
 public:
@@ -27,16 +26,21 @@ public:
 private:
 	byte state;
 	unsigned long lastEventMillis;
+	unsigned long lastTcpEventMillis;
+	bool tcpClientConnected = true;
 	WifiCredentials* credentials;
 	WiFiUDP udp;
 	WiFiServer* tcp;
+	WiFiClient tcpClient;
 	IPAddress* broadcast;
+	char beaconPacket[6] = "hello";
 
 	void connect(unsigned long millis);
 	void disconnect();
 	void beacon(unsigned long millis);
-	void listenForTCP(unsigned long millis);
+	char parseCommand(char *buffer);
 	void checkForHello(unsigned long millis);
+	bool checkTcpState(unsigned long millis);
 };
 
 #endif

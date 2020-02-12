@@ -1,16 +1,12 @@
 #ifndef Controller_h
 #define Controller_h
 
+#include "commands.h"
 #include "ICommChannel.h"
 #include "state-machine.h"
 #include "IContinuityTester.h"
 #include "IFiringMechanism.h"
 #include "IStateObserver.h"
-
-#define Command_Arm 'A'
-#define Command_Disarm 'D'
-#define Command_TestContinuity 'C'
-#define Command_Fire 'F'
 
 #define Response_InvalidCommand 'I'
 #define Response_InvalidState 'S'

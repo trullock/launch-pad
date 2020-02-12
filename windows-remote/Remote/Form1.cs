@@ -15,6 +15,8 @@ namespace Remote
 		SerialPort port;
 		IPEndPoint broadcastAddress;
 		UdpClient udpClient;
+		TcpClient tcpClient;
+		byte[] tcpBuffer = new byte[256];
 
 		public Form1()
 		{
@@ -70,7 +72,7 @@ namespace Remote
 
 		void btnArm_Click(object sender, EventArgs e)
 		{
-			port.Write(":A");
+			sendTCP("Arm\n");
 		}
 
 		void btnTestContinuity_Click(object sender, EventArgs e)
@@ -115,8 +117,9 @@ namespace Remote
 
 		void btnUdpListen_Click(object sender, EventArgs e)
 		{
-			this.broadcastAddress = new IPEndPoint(IPAddress.Parse("192.168.2.114"), 1234);
+			this.broadcastAddress = new IPEndPoint(IPAddress.Any, 4321);
 			this.udpClient = new UdpClient();
+			this.udpClient.EnableBroadcast = true;
 			this.udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 			//this.udpClient.ExclusiveAddressUse = true;
 			this.udpClient.Client.Bind(this.broadcastAddress);
@@ -126,61 +129,85 @@ namespace Remote
 
 		void ConnectTCP(string hostname)
 		{
-
 			try
 			{
-				TcpClient tcpclnt = new TcpClient();
-				Console.WriteLine("Connecting.....");
+				tcpClient = new TcpClient();
+				SetText("Connecting.....");
 
-				tcpclnt.Connect(hostname, 1234);
+				tcpClient.Connect(hostname, 4321);
 				// use the ipaddress as in the server program
+				//tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+				
+				SetText("Connected");
+				SetText("Enter the string to be transmitted : ");
 
-				Console.WriteLine("Connected");
-				Console.Write("Enter the string to be transmitted : ");
+				Stream stm = tcpClient.GetStream();
 
-				Stream stm = tcpclnt.GetStream();
-
-				ASCIIEncoding asen = new ASCIIEncoding();
-				byte[] ba = asen.GetBytes("i am client");
-				Console.WriteLine("Transmitting.....");
-
-				stm.Write(ba, 0, ba.Length);
-
-				byte[] bb = new byte[100];
-				int k = stm.Read(bb, 0, 100);
-
-				for (int i = 0; i < k; i++)
-					Console.Write(Convert.ToChar(bb[i]));
-
-				tcpclnt.Close();
+				stm.BeginRead(tcpBuffer, 0, tcpBuffer.Length, HandleTcpResponse, stm);
+				
 			}
 
 			catch (Exception e)
 			{
-				Console.WriteLine("Error..... " + e.StackTrace);
+				SetText("Error..... " + e.StackTrace);
 			}
 		}
 
+		void HandleTcpResponse(IAsyncResult ar)
+		{
+			if (tcpClient == null)
+				return;
+
+			var stm = ar.AsyncState as Stream;
+
+			if (!stm.CanRead)
+				return;
+
+			var bytesRead = stm.EndRead(ar);
+			if(bytesRead > 0)
+				SetText(Encoding.ASCII.GetString(tcpBuffer, 0, bytesRead));
+
+			stm.BeginRead(this.tcpBuffer, 0, tcpBuffer.Length, HandleTcpResponse, stm);
+		}
+
+
+		void sendTCP(string message)
+		{
+			try
+			{
+				Stream stm = tcpClient.GetStream();
+
+				ASCIIEncoding asen = new ASCIIEncoding();
+				byte[] ba = asen.GetBytes(message);
+				SetText("Transmitting.....");
+
+				stm.Write(ba, 0, ba.Length);
+				//stm.Flush();
+			}
+			catch (Exception e)
+			{
+				SetText("Error..... " + e.StackTrace);
+			}
+		}
 		void ReceiveCallback(IAsyncResult ar)
 		{
-			var from = new IPEndPoint(IPAddress.Loopback, 1234);
+			var from = new IPEndPoint(IPAddress.Any, 4321);
 			var buffer = this.udpClient.EndReceive(ar, ref from);
 			var data = Encoding.ASCII.GetString(buffer);
 
-			if (data == "hello")
+			if (data == "helloo")
 			{
 				IPAddress ipAd = IPAddress.Parse("192.168.2.114");
 
 				/* Initializes the Listener */
 				// TcpListener myList=new TcpListener(IPAddress.Any,8001);
-				TcpListener myList = new TcpListener(ipAd, 1234);
+				TcpListener myList = new TcpListener(ipAd, 4321);
 
 				/* Start Listeneting at the specified port */
 				myList.Start();
 
 				Console.WriteLine("The server is running at port 8001...");
-				Console.WriteLine("The local End point is  :" +
-				                  myList.LocalEndpoint);
+				Console.WriteLine("The local End point is  :" +				                  myList.LocalEndpoint);
 				Console.WriteLine("Waiting for a connection.....");
 
 				Socket s = myList.AcceptSocket();
@@ -207,7 +234,30 @@ namespace Remote
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			ConnectTCP("192.168.2.209");
+			ConnectTCP("192.168.2.251");
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if(tcpClient != null)
+				tcpClient.Close();
+
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void btnTcpDisconnect_Click(object sender, EventArgs e)
+		{
+
+			if (tcpClient != null)
+			{
+				tcpClient.Close();
+				tcpClient.Dispose();
+				tcpClient = null;
+			}
 		}
 	}
 }

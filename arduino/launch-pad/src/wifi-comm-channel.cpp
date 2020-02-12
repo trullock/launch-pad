@@ -1,16 +1,17 @@
 #include "wifi-comm-channel.h"
-
+#include "commands.h"
 
 WifiCommChannel::WifiCommChannel()
 {
 	tcp = new WiFiServer(4321);
-	
-	u32_t b = 4294967295; // 255.255.255.255
-	broadcast = new IPAddress(b);
+	broadcast = new IPAddress(255, 255, 255, 255);
 
 	WifiCredentials creds;
 
 	setConnectionDetails(&creds);
+
+	lastEventMillis = 0;
+	lastTcpEventMillis = 0;
 }
 
 void WifiCommChannel::setConnectionDetails(WifiCredentials* creds)
@@ -34,6 +35,8 @@ void WifiCommChannel::loop(unsigned long millis)
 			{
 				Serial.println("Connecting: connected");
 				state = Wifi_State_Connected;
+				tcp->begin();
+				lastEventMillis = millis;
 				break;
 			}
 
@@ -41,20 +44,15 @@ void WifiCommChannel::loop(unsigned long millis)
 			{
 				Serial.println("Connecting: timeout disconnect");
 				state = Wifi_State_Disconnected;
+				lastEventMillis = millis;
 				// TODO: retry indefinitely, or abort at some point?
 				break;
 			}
-
-		case Wifi_State_Connected:
-			Serial.println("Connected: beaconing");
-			state = Wifi_State_Beaconing;
-			listenForTCP(millis);
 			break;
 
-		case Wifi_State_Beaconing:
-			Serial.println("Beaconing: beaconing");
+		case Wifi_State_Connected:
+			checkTcpState(millis);
 			beacon(millis);
-			checkForHello(millis);
 			break;
 	}
 }
@@ -63,28 +61,14 @@ void WifiCommChannel::beacon(unsigned long millis)
 {
 	if(millis >= lastEventMillis + Wifi_Beacon_Interval_Millis)
 	{
+		Serial.println("Beaconing: actually beaconing");
 		udp.beginPacket(*broadcast, 4321);
-		char* buffer = "hello";
-		udp.write(buffer, 5);
+		udp.write(beaconPacket);
 		udp.endPacket();
+		udp.flush();
 
 		lastEventMillis = millis;
 	}
-}
-
-void WifiCommChannel::checkForHello(unsigned long millis)
-{
-	if(!tcp->available())
-		return;
-
-	// TODO: can we guarantee all of "HELLO\r\n" is available here? Should fit in one packet...
-
-	//if(tcp.readStringUntil('\n') != String("HELLO"))
-	//	return;
-
-	state = Wifi_State_TcpConnected;
-	lastEventMillis = millis;
-	
 }
 
 void WifiCommChannel::connect(unsigned long millis)
@@ -94,15 +78,92 @@ void WifiCommChannel::connect(unsigned long millis)
 	lastEventMillis = millis;
 }
 
-void WifiCommChannel::listenForTCP(unsigned long millis)
+char WifiCommChannel::parseCommand(char *buffer)
 {
-	tcp->begin();
-	lastEventMillis = millis;
+	if(strcmp("Arm", buffer) == 0)
+		return Command_Arm;
+
+	if (strcmp("Disarm", buffer) == 0)
+		return Command_Disarm;
+
+	if (strcmp("TestContinuity", buffer) == 0)
+		return Command_TestContinuity;
+
+	if (strcmp("Fire", buffer) == 0)
+		return Command_Fire;
+
+	return '\0';
+}
+
+bool WifiCommChannel::checkTcpState(unsigned long millis)
+{
+	if (tcp->hasClient())
+	{
+		// client waiting
+		lastTcpEventMillis = millis;
+		
+		if (tcpClient.connected())
+		{
+			tcpClient.stop();
+			// disconnected old client
+		}
+	}
+
+	bool prevClientDisconnected = !tcpClient.connected();
+
+	if (prevClientDisconnected)
+		tcpClient = tcp->available();
+
+	if (tcpClient.connected() && prevClientDisconnected)
+	{
+		if(prevClientDisconnected)
+		{
+			tcpClient.keepAlive();
+			tcpClientConnected = true;
+			lastTcpEventMillis = millis;
+
+			// new connection
+		} 
+		else if(tcpClient.available())
+		{
+			// data waiting
+			// this supports command and heartbeat timeout detection
+			lastTcpEventMillis = millis;
+		}
+	}
+
+	if (tcpClientConnected && tcpClient.status() == CLOSED)
+	{
+		// client has disconnected
+		tcpClientConnected = false;
+	}
+
+	// check for application layer TCP timeout
+	if (tcpClientConnected && lastTcpEventMillis + Wifi_Tcp_Connection_TimeoutMillis <= millis)
+	{
+		tcpClient.stop();
+		tcpClientConnected = false;
+	}
+
+	return tcpClientConnected;
 }
 
 char WifiCommChannel::read()
 {
-	
+	char command = '\0';
+
+	if (tcpClient.connected() && tcpClient.available())
+	{
+		char buffer[16];
+		for (int i = 0; i < 16; i++)
+			buffer[i] = 0;
+
+		tcpClient.readBytesUntil('\n', buffer, 16);
+		
+		command = parseCommand(buffer);
+	}
+
+	return command;
 }
 
 void WifiCommChannel::write(char data)
@@ -112,5 +173,5 @@ void WifiCommChannel::write(char data)
 
 bool WifiCommChannel::isConnected()
 {
-	return state == Wifi_State_TcpConnected;
+	return tcpClient.connected();
 }
