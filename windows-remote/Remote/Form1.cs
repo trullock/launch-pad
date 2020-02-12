@@ -1,7 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Remote
@@ -9,6 +13,9 @@ namespace Remote
 	public partial class Form1 : Form
 	{
 		SerialPort port;
+		IPEndPoint broadcastAddress;
+		UdpClient udpClient;
+
 		public Form1()
 		{
 			InitializeComponent();
@@ -90,6 +97,117 @@ namespace Remote
 		private void btnClear_Click(object sender, EventArgs e)
 		{
 			txtConsole.Text = string.Empty;
+		}
+
+		private IPAddress LocalIPAddress()
+		{
+			if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+			{
+				return null;
+			}
+
+			IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+
+			return host
+				.AddressList
+				.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+		}
+
+		void btnUdpListen_Click(object sender, EventArgs e)
+		{
+			this.broadcastAddress = new IPEndPoint(IPAddress.Parse("192.168.2.114"), 1234);
+			this.udpClient = new UdpClient();
+			this.udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+			//this.udpClient.ExclusiveAddressUse = true;
+			this.udpClient.Client.Bind(this.broadcastAddress);
+
+			this.udpClient.BeginReceive(this.ReceiveCallback, null);
+		}
+
+		void ConnectTCP(string hostname)
+		{
+
+			try
+			{
+				TcpClient tcpclnt = new TcpClient();
+				Console.WriteLine("Connecting.....");
+
+				tcpclnt.Connect(hostname, 1234);
+				// use the ipaddress as in the server program
+
+				Console.WriteLine("Connected");
+				Console.Write("Enter the string to be transmitted : ");
+
+				Stream stm = tcpclnt.GetStream();
+
+				ASCIIEncoding asen = new ASCIIEncoding();
+				byte[] ba = asen.GetBytes("i am client");
+				Console.WriteLine("Transmitting.....");
+
+				stm.Write(ba, 0, ba.Length);
+
+				byte[] bb = new byte[100];
+				int k = stm.Read(bb, 0, 100);
+
+				for (int i = 0; i < k; i++)
+					Console.Write(Convert.ToChar(bb[i]));
+
+				tcpclnt.Close();
+			}
+
+			catch (Exception e)
+			{
+				Console.WriteLine("Error..... " + e.StackTrace);
+			}
+		}
+
+		void ReceiveCallback(IAsyncResult ar)
+		{
+			var from = new IPEndPoint(IPAddress.Loopback, 1234);
+			var buffer = this.udpClient.EndReceive(ar, ref from);
+			var data = Encoding.ASCII.GetString(buffer);
+
+			if (data == "hello")
+			{
+				IPAddress ipAd = IPAddress.Parse("192.168.2.114");
+
+				/* Initializes the Listener */
+				// TcpListener myList=new TcpListener(IPAddress.Any,8001);
+				TcpListener myList = new TcpListener(ipAd, 1234);
+
+				/* Start Listeneting at the specified port */
+				myList.Start();
+
+				Console.WriteLine("The server is running at port 8001...");
+				Console.WriteLine("The local End point is  :" +
+				                  myList.LocalEndpoint);
+				Console.WriteLine("Waiting for a connection.....");
+
+				Socket s = myList.AcceptSocket();
+				Console.WriteLine("Connection accepted from " + s.RemoteEndPoint);
+
+				byte[] b = new byte[100];
+				int k = s.Receive(b);
+				Console.WriteLine("Recieved...");
+				for (int i = 0; i < k; i++)
+					Console.Write(Convert.ToChar(b[i]));
+
+				ASCIIEncoding asen = new ASCIIEncoding();
+				s.Send(asen.GetBytes("The string was recieved by the server."));
+				Console.WriteLine("\nSent Acknowledgement");
+				/* clean up */
+				s.Close();
+				myList.Stop();
+			}
+
+			SetText(from.ToString() + ": " + data + "\n");
+
+			this.udpClient.BeginReceive(this.ReceiveCallback, null);
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			ConnectTCP("192.168.2.209");
 		}
 	}
 }

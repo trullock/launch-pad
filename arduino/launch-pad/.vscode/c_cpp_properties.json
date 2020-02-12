@@ -3,17 +3,17 @@
         {
             "name": "Win32",
             "includePath": [
-                "C:\\Users\\Andrew Bullock\\Documents\\Arduino\\libraries\\TimerOne",
-                "${workspaceFolder}/test/mocks/**",
-                "C:\\Users\\Andrew Bullock\\Documents\\Arduino\\libraries\\**",
-                "C:\\Arduino\\tools\\**",
-                "C:\\Arduino\\hardware\\arduino\\avr\\**",
-                "C:\\Arduino\\hardware\\tools\\avr\\**",
-                "C:\\Arduino\\hardware\\tools\\avr\\avr\\include\\**",
+                "C:/Users/Andrew Bullock/AppData/Local/Arduino15/packages/esp8266/tools",
+                "C:/Users/Andrew Bullock/AppData/Local/Arduino15/packages/esp8266/tools/**",
+                "C:/Users/Andrew Bullock/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.6.3",
+                "C:/Users/Andrew Bullock/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.6.3/**",
+                "./**",
+                "${workspaceFolder}",
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/libraries/**",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
-                "C:\\Program Files (x86)\\Arduino\\tools\\**"
+                "C:\\Program Files (x86)\\Arduino\\tools\\**",
+                "C:\\Users\\Andrew Bullock\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\**",
+                "C:\\Users\\Andrew Bullock\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**"
             ],
             "defines": [
                 "_DEBUG",
@@ -26,9 +26,7 @@
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-x64",
-            "forcedInclude": [
-                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
-            ]
+            "forcedInclude": []
         }
     ],
     "version": 4

@@ -22,3 +22,8 @@ int analogRead(int pin)
 void delay(int duration){
     // noop
 }
+
+unsigned long millis()
+{
+	return 0;
+}

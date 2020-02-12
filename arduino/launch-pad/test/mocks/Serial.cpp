@@ -25,10 +25,11 @@ void Serial_::pushData(int data){
 	bufferSize++;
 }
 
-void Serial_::println(char c)
-{
-	// NIE
-}
+void Serial_::println(char c) { }
+void Serial_::println(const char c[]) {}
+void Serial_::println(String s) {}
+void Serial_::println(String *s) {}
+void Serial_::print(const char c[]) {}
 
 void Serial_::reset()
 {

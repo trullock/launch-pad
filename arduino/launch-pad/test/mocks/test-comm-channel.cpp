@@ -17,6 +17,8 @@ void TestCommChannel::reset()
 	readWriteIndex = 0;
 	writeReadIndex = 0;
 	writeWriteIndex = 0;
+
+	connected = false;
 }
 
 char TestCommChannel::read()
@@ -42,4 +44,14 @@ char TestCommChannel::getWrittenChar()
 char TestCommChannel::getLastChar()
 {
 	return writeBuffer[readWriteIndex];
+}
+
+bool TestCommChannel::isConnected()
+{
+	return connected;
+}
+
+void TestCommChannel::setConnected(bool c)
+{
+	connected = c;
 }

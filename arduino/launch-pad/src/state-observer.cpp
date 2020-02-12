@@ -1,8 +1,9 @@
 #include "state-observer.h"
 #include <arduino.h>
 
-#define InterlockEngagedReadPin 7
-#define FiringMechanismEngagedReadPin 8
+// https://chewett.co.uk/blog/1066/pin-numbering-for-wemos-d1-mini-esp8266/
+#define InterlockEngagedReadPin 5 // D1
+#define FiringMechanismEngagedReadPin 4 // D2
 
 StateObserver::StateObserver()
 {

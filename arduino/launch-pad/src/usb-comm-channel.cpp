@@ -10,6 +10,10 @@ UsbCommChannel::UsbCommChannel()
 	Serial.begin(BAUD);
 }
 
+void UsbCommChannel::loop(unsigned long millis)
+{
+}
+
 char UsbCommChannel::read()
 {
 	if (!Serial.available())
@@ -35,4 +39,10 @@ char UsbCommChannel::read()
 void UsbCommChannel::write(char data)
 {
 	Serial.println(data);
+}
+
+bool UsbCommChannel::isConnected()
+{
+	// todo: implement properly
+	return true;
 }

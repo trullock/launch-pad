@@ -1,6 +1,8 @@
 #ifndef Serial_h
 #define Serial_h
 
+#include <WString.h>
+
 class Serial_
 {
 public:
@@ -12,6 +14,10 @@ public:
 	void pushData(int);
 	void reset();
 	void println(char c);
+	void println(const char c[]);
+	void println(String s);
+	void println(String* s);
+	void print(const char c[]);
 
 private:
 	int buffer[16];

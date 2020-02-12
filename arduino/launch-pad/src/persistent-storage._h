@@ -1,0 +1,14 @@
+#ifndef PersistentStorage_h
+#define PersistentStorage_h
+
+#include "wifi-credentials.h"
+
+class Storage
+{
+public:
+	Storage();
+	void writeWifiCredentials(WifiCredentials creds);
+	WifiCredentials readWifiCredentials();
+};
+
+#endif

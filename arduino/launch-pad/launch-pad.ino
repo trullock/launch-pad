@@ -2,13 +2,16 @@
 #include "src/continuity-tester.h"
 #include "src/firing-mechanism.h"
 #include "src/state-observer.h"
-#include "src/usb-comm-channel.h"
+#include "src/wifi-comm-channel.h"
 
 Controller* controller;
 
 void setup()
 {
-	ICommChannel* comms = new UsbCommChannel();
+	Serial.begin(115200);
+
+	
+	ICommChannel* comms = new WifiCommChannel();
 	IContinuityTester* continuityTester = new ContinuityTester();
 	IFiringMechanism* firingMechanism = new FiringMechanism();
 	StateMachine* stateMachine = new StateMachine();
@@ -21,4 +24,6 @@ void loop()
 {
 	unsigned long m = millis();
 	controller->loop(m);
+
+	//Serial.println("loopy");
 }

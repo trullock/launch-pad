@@ -11,6 +11,8 @@ public:
 	char getWrittenChar();
 	char getLastChar();
 	void reset();
+	void setConnected(bool c);
+	bool isConnected();
 	
 private:
 	char readBuffer[16];
@@ -20,4 +22,6 @@ private:
 	char writeBuffer[16];
 	int writeWriteIndex = 0;
 	int writeReadIndex = 0;
+
+	bool connected;
 };

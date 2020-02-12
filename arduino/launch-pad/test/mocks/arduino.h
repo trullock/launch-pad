@@ -6,6 +6,7 @@
 #include <cstdlib>
 
 #include "Serial.h"
+#include "WString.h"
 
 // Fix arduino references. These are probably not real/correct values but it shouldnt metter for these tests
 #define HIGH 1
@@ -22,7 +23,7 @@ void digitalWrite(int pin, int mode);
 int digitalRead(int pin);
 int analogRead(int pin);
 void delay(int duration);
-
+unsigned long millis();
 
 
 #endif

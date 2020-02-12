@@ -1,7 +1,9 @@
 #include "continuity-tester.h"
+#include <arduino.h>
 
-#define ContinuityWritePin 9
-#define ContinuityReadPin A0
+// https://chewett.co.uk/blog/1066/pin-numbering-for-wemos-d1-mini-esp8266/
+#define ContinuityWritePin 14 // D5
+#define ContinuityReadPin 12 // D6
 
 ContinuityTester::ContinuityTester()
 {

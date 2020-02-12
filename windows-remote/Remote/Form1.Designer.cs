@@ -38,6 +38,8 @@
 			this.btnFire = new System.Windows.Forms.Button();
 			this.btnDisconnect = new System.Windows.Forms.Button();
 			this.btnClear = new System.Windows.Forms.Button();
+			this.btnUdpListen = new System.Windows.Forms.Button();
+			this.button1 = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -137,11 +139,33 @@
 			this.btnClear.UseVisualStyleBackColor = true;
 			this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
 			// 
+			// btnUdpListen
+			// 
+			this.btnUdpListen.Location = new System.Drawing.Point(634, 6);
+			this.btnUdpListen.Name = "btnUdpListen";
+			this.btnUdpListen.Size = new System.Drawing.Size(104, 24);
+			this.btnUdpListen.TabIndex = 10;
+			this.btnUdpListen.Text = "Listen";
+			this.btnUdpListen.UseVisualStyleBackColor = true;
+			this.btnUdpListen.Click += new System.EventHandler(this.btnUdpListen_Click);
+			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(637, 63);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(75, 23);
+			this.button1.TabIndex = 11;
+			this.button1.Text = "button1";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.ClientSize = new System.Drawing.Size(1377, 796);
+			this.Controls.Add(this.button1);
+			this.Controls.Add(this.btnUdpListen);
 			this.Controls.Add(this.btnClear);
 			this.Controls.Add(this.btnDisconnect);
 			this.Controls.Add(this.btnFire);
@@ -172,6 +196,8 @@
 		private System.Windows.Forms.Button btnFire;
 		private System.Windows.Forms.Button btnDisconnect;
 		private System.Windows.Forms.Button btnClear;
+		private System.Windows.Forms.Button btnUdpListen;
+		private System.Windows.Forms.Button button1;
 	}
 }
 

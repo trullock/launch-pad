@@ -15,6 +15,14 @@ Controller::Controller(ICommChannel* c, StateMachine* s, IContinuityTester* ct, 
 
 void Controller::loop(unsigned long millis)
 {
+	comms->loop(millis);
+
+	if(!comms->isConnected())
+	{
+		disarm();
+		return;
+	}
+	
 	checkState(millis);
 
 	if (haveTimedOut(millis))
