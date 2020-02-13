@@ -9,6 +9,8 @@ class WiFiUDP
 		int beginPacket(IPAddress ip, uint16_t port);
 		size_t write(const char *buffer, size_t size);
 		int endPacket();
+		void flush();
+		void write(char *buff);
 };
 
 #endif

@@ -7,6 +7,7 @@
 #include "IContinuityTester.h"
 #include "IFiringMechanism.h"
 #include "IStateObserver.h"
+#include "Logger.h"
 
 #define Response_InvalidCommand 'I'
 #define Response_InvalidState 'S'

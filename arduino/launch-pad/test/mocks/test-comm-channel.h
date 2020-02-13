@@ -13,6 +13,7 @@ public:
 	void reset();
 	void setConnected(bool c);
 	bool isConnected();
+	void loop(unsigned long millis);
 	
 private:
 	char readBuffer[16];

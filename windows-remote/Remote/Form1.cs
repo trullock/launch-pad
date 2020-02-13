@@ -72,22 +72,22 @@ namespace Remote
 
 		void btnArm_Click(object sender, EventArgs e)
 		{
-			sendTCP("Arm\n");
+			sendTCP("Arm");
 		}
 
 		void btnTestContinuity_Click(object sender, EventArgs e)
 		{
-			port.Write(":C");
+			sendTCP("TestContinuity");
 		}
 
 		void btnDisarm_Click(object sender, EventArgs e)
 		{
-			port.Write(":D");
+			sendTCP("Disarm");
 		}
 
 		void btnFire_Click(object sender, EventArgs e)
 		{
-			port.Write(":F");
+			sendTCP("Fire");
 		}
 
 		void btnDisconnect_Click(object sender, EventArgs e)
@@ -132,15 +132,13 @@ namespace Remote
 			try
 			{
 				tcpClient = new TcpClient();
-				SetText("Connecting.....");
+				SetText("Connecting.....\r\n");
 
 				tcpClient.Connect(hostname, 4321);
 				// use the ipaddress as in the server program
 				//tcpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
 				
-				SetText("Connected");
-				SetText("Enter the string to be transmitted : ");
-
+				SetText("Connected\r\n");
 				Stream stm = tcpClient.GetStream();
 
 				stm.BeginRead(tcpBuffer, 0, tcpBuffer.Length, HandleTcpResponse, stm);
@@ -178,8 +176,8 @@ namespace Remote
 				Stream stm = tcpClient.GetStream();
 
 				ASCIIEncoding asen = new ASCIIEncoding();
-				byte[] ba = asen.GetBytes(message);
-				SetText("Transmitting.....");
+				byte[] ba = asen.GetBytes(message + '\0');
+				SetText("Transmitting: " + message + "\r\n");
 
 				stm.Write(ba, 0, ba.Length);
 				//stm.Flush();
@@ -227,7 +225,7 @@ namespace Remote
 				myList.Stop();
 			}
 
-			SetText(from.ToString() + ": " + data + "\n");
+			SetText(from.ToString() + ": " + data + "\r\n");
 
 			this.udpClient.BeginReceive(this.ReceiveCallback, null);
 		}

@@ -3,6 +3,7 @@
 
 #include "ICommChannel.h"
 #include "wifi-credentials.h"
+#include "logger.h"
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 
@@ -33,7 +34,7 @@ private:
 	WiFiServer* tcp;
 	WiFiClient tcpClient;
 	IPAddress* broadcast;
-	char beaconPacket[6] = "hello";
+	char beaconPacket[6] = {'h', 'e', 'l', 'l', 'o' };
 
 	void connect(unsigned long millis);
 	void disconnect();

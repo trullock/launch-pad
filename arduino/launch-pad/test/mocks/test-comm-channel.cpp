@@ -55,3 +55,8 @@ void TestCommChannel::setConnected(bool c)
 {
 	connected = c;
 }
+
+void TestCommChannel::loop(unsigned long millis)
+{
+	
+}

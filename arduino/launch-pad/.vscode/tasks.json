@@ -13,11 +13,7 @@
                 "src/*.cpp",
                 "-include",
 				"test/mocks/arduino.h",
-                //"-Ilibraries/AES",
                 "-Itest/mocks",
-                //"-IC:/Arduino/hardware/arduino/avr/cores/arduino",
-                //"-IC:/Arduino/hardware/tools/avr/avr/include",
-                //"-IC:/Arduino/hardware/arduino/avr/variants/standard",
                 "test/mocks/*.cpp",
 				"test/tests/*.cpp",
 				"test/tests/controller-specs/*.cpp"

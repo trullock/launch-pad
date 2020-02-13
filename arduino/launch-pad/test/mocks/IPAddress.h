@@ -4,7 +4,7 @@
 class IPAddress 
 {
 	public:
-		IPAddress(uint32_t address);
+		IPAddress(int a, int b, int c, int d);
 };
 
 #endif

@@ -7,7 +7,6 @@ WifiCommChannel::WifiCommChannel()
 	broadcast = new IPAddress(255, 255, 255, 255);
 
 	WifiCredentials creds;
-
 	setConnectionDetails(&creds);
 
 	lastEventMillis = 0;
@@ -26,14 +25,14 @@ void WifiCommChannel::loop(unsigned long millis)
 	switch(state)
 	{
 		case Wifi_State_Disconnected:
-			Serial.println("Disconnected: connecting");
+			Log.println("WifiCommChannel::loop: Disconnected, connecting");
 			connect(millis);
 			break;
 
 		case Wifi_State_Connecting:
 			if(WiFi.status() == WL_CONNECTED)
 			{
-				Serial.println("Connecting: connected");
+				Log.println("WifiCommChannel::loop: Connecting, connected");
 				state = Wifi_State_Connected;
 				tcp->begin();
 				lastEventMillis = millis;
@@ -42,7 +41,7 @@ void WifiCommChannel::loop(unsigned long millis)
 
 			if(millis >= lastEventMillis + Wifi_Connecting_TimeoutMillis)
 			{
-				Serial.println("Connecting: timeout disconnect");
+				Log.println("WifiCommChannel::loop: Connecting, timeout, disconnecting");
 				state = Wifi_State_Disconnected;
 				lastEventMillis = millis;
 				// TODO: retry indefinitely, or abort at some point?
@@ -61,7 +60,7 @@ void WifiCommChannel::beacon(unsigned long millis)
 {
 	if(millis >= lastEventMillis + Wifi_Beacon_Interval_Millis)
 	{
-		Serial.println("Beaconing: actually beaconing");
+		//Log.println("WifiCommChannel::beacon: Sending UDP beacon");
 		udp.beginPacket(*broadcast, 4321);
 		udp.write(beaconPacket);
 		udp.endPacket();
@@ -80,6 +79,8 @@ void WifiCommChannel::connect(unsigned long millis)
 
 char WifiCommChannel::parseCommand(char *buffer)
 {
+	Log.println(buffer);
+
 	if(strcmp("Arm", buffer) == 0)
 		return Command_Arm;
 
@@ -92,18 +93,20 @@ char WifiCommChannel::parseCommand(char *buffer)
 	if (strcmp("Fire", buffer) == 0)
 		return Command_Fire;
 
-	return '\0';
+	return Command_Null;
 }
 
 bool WifiCommChannel::checkTcpState(unsigned long millis)
 {
 	if (tcp->hasClient())
 	{
+		Log.println("WifiCommChannel::checkTcpState: New client waiting");
 		// client waiting
 		lastTcpEventMillis = millis;
 		
 		if (tcpClient.connected())
 		{
+			Log.println("WifiCommChannel::checkTcpState: Disconnecting old client");
 			tcpClient.stop();
 			// disconnected old client
 		}
@@ -114,7 +117,7 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 	if (prevClientDisconnected)
 		tcpClient = tcp->available();
 
-	if (tcpClient.connected() && prevClientDisconnected)
+	if (tcpClient.connected())
 	{
 		if(prevClientDisconnected)
 		{
@@ -122,6 +125,7 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 			tcpClientConnected = true;
 			lastTcpEventMillis = millis;
 
+			Log.println("WifiCommChannel::checkTcpState: New connection found");
 			// new connection
 		} 
 		else if(tcpClient.available())
@@ -129,6 +133,8 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 			// data waiting
 			// this supports command and heartbeat timeout detection
 			lastTcpEventMillis = millis;
+
+			Log.println("WifiCommChannel::checkTcpState: TCP data available");
 		}
 	}
 
@@ -136,6 +142,8 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 	{
 		// client has disconnected
 		tcpClientConnected = false;
+
+		Log.println("WifiCommChannel::checkTcpState: Client has disconnected");
 	}
 
 	// check for application layer TCP timeout
@@ -143,6 +151,8 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 	{
 		tcpClient.stop();
 		tcpClientConnected = false;
+
+		Log.println("WifiCommChannel::checkTcpState: Application layer keepalive timeout");
 	}
 
 	return tcpClientConnected;
@@ -150,17 +160,25 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 
 char WifiCommChannel::read()
 {
-	char command = '\0';
+	char command = Command_Null;
 
-	if (tcpClient.connected() && tcpClient.available())
+	int availableBytes = tcpClient.available();
+
+	if (tcpClient.connected() && availableBytes > 0)
 	{
-		char buffer[16];
-		for (int i = 0; i < 16; i++)
+		Log.println("WifiCommChannel::read: Client is connected and data is available");
+		Log.print("WifiCommChannel::read: available bytes: ");
+		Log.println(availableBytes);
+
+		char buffer[availableBytes];
+		for (int i = 0; i < availableBytes; i++)
 			buffer[i] = 0;
 
-		tcpClient.readBytesUntil('\n', buffer, 16);
-		
+		tcpClient.readBytes(buffer, availableBytes);
 		command = parseCommand(buffer);
+
+		Log.print("WifiCommChannel::read: Command received: ");
+		Log.println(command);
 	}
 
 	return command;
