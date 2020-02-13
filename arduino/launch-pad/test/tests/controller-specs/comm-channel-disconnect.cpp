@@ -5,7 +5,7 @@
 #include "../../mocks/test-state-observer.h"
 #include "../../../src/controller.h"
 
-TEST_CASE("Command Timeouts") {
+TEST_CASE("Comm channel disconnect") {
 
 	TestCommChannel comms;
 	TestContinuityTester continuityTester;

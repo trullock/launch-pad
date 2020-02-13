@@ -7,6 +7,7 @@ WifiCommChannel::WifiCommChannel()
 	broadcast = new IPAddress(255, 255, 255, 255);
 
 	WifiCredentials creds;
+
 	setConnectionDetails(&creds);
 
 	lastEventMillis = 0;
