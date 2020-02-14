@@ -175,8 +175,7 @@ char WifiCommChannel::readCommand()
 		Log.println(availableBytes);
 
 		char buffer[availableBytes];
-		for (int i = 0; i < availableBytes; i++)
-			buffer[i] = 0;
+		memset(buffer, 0x0, availableBytes);
 
 		tcpClient.readBytes(buffer, availableBytes);
 		command = parseCommand(buffer);
@@ -190,7 +189,12 @@ char WifiCommChannel::readCommand()
 
 void WifiCommChannel::writeResponse(char response)
 {
+	if(!isConnected())
+		return;
 
+	tcpClient.write(response);
+	tcpClient.flush();
+	yield();
 }
 
 bool WifiCommChannel::isConnected()

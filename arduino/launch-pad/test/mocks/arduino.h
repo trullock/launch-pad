@@ -24,6 +24,6 @@ int digitalRead(int pin);
 int analogRead(int pin);
 void delay(int duration);
 unsigned long millis();
-
+void yield();
 
 #endif
