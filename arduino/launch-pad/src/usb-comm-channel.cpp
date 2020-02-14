@@ -36,9 +36,9 @@ char UsbCommChannel::readCommand()
 	return command;
 }
 
-void UsbCommChannel::write(char data)
+void UsbCommChannel::writeResponse(char response)
 {
-	Serial.println(data);
+	Serial.println(response);
 }
 
 bool UsbCommChannel::isConnected()

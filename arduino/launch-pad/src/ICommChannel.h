@@ -7,7 +7,7 @@ class ICommChannel {
 	virtual ~ICommChannel() {};
 	virtual void loop(unsigned long millis) = 0;
 	virtual char readCommand() = 0;
-	virtual void write(char data) = 0;
+	virtual void writeResponse(char response) = 0;
 	virtual bool isConnected() = 0;
 };
 

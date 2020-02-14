@@ -31,9 +31,9 @@ void TestCommChannel::pushReadChar(char c)
 	readBuffer[readWriteIndex++] = c;
 }
 
-void TestCommChannel::write(char data)
+void TestCommChannel::writeResponse(char response)
 {
-	writeBuffer[writeWriteIndex++] = data;
+	writeBuffer[writeWriteIndex++] = response;
 }
 
 char TestCommChannel::getWrittenChar()

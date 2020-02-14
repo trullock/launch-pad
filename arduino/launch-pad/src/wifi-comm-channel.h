@@ -21,7 +21,7 @@ public:
 	~WifiCommChannel() {}
 	void setConnectionDetails(WifiCredentials* creds);
 	virtual char readCommand();
-	virtual void write(char data);
+	virtual void writeResponse(char response);
 	virtual bool isConnected();
 	virtual void loop(unsigned long millis);
 private:

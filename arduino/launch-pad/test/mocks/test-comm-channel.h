@@ -7,7 +7,7 @@ public:
 	~TestCommChannel() {};
 	char readCommand();
 	void pushReadChar(char c);
-	void write(char data);
+	void writeResponse(char response);
 	char getWrittenChar();
 	char getLastChar();
 	void reset();

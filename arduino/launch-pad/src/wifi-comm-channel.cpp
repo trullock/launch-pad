@@ -188,7 +188,7 @@ char WifiCommChannel::readCommand()
 	return command;
 }
 
-void WifiCommChannel::write(char data)
+void WifiCommChannel::writeResponse(char response)
 {
 
 }
