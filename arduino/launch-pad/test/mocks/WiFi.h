@@ -17,7 +17,7 @@ class WiFi_
 {
 	public:
 		wl_status_t status();
-		wl_status_t begin(char* ssid, char *passphrase);
+		wl_status_t begin(const char* ssid, const char *passphrase);
 };
 
 extern WiFi_ WiFi;

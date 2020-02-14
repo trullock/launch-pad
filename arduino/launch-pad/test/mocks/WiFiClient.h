@@ -10,6 +10,8 @@ class WiFiClient
 		void stop();
 		void keepAlive();
 		int status();
+		void write(char data);
+		void flush();
 		size_t readBytes(char *buffer, size_t length);
 };
 

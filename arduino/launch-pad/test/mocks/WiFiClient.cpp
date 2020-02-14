@@ -23,6 +23,14 @@ void WiFiClient::keepAlive()
 {
 }
 
+void WiFiClient::write(char data)
+{
+}
+
+void WiFiClient::flush()
+{
+}
+
 int WiFiClient::status()
 {
 	return 0;

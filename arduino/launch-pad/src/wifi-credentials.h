@@ -6,8 +6,8 @@
 
 struct WifiCredentials
 {
-	char* ssid;
-	char* password;
+	const char* ssid;
+	const char* password;
 };
 
 #endif

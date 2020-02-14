@@ -5,7 +5,7 @@ wl_status_t WiFi_::status()
 	return WL_DISCONNECTED;
 }
 
-wl_status_t WiFi_::begin(char *ssid, char *passphrase)
+wl_status_t WiFi_::begin(const char *ssid, const char *passphrase)
 {
 	return WL_DISCONNECTED;
 }
