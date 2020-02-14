@@ -17,6 +17,7 @@ TEST_CASE("State Transitions") {
 
 	//reset
 	comms.reset();
+	comms.setConnected(true);
 	state.disarm();
 	firingMechanism.reset();
 

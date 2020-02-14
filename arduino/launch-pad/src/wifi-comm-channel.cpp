@@ -1,4 +1,5 @@
 #include "wifi-comm-channel.h"
+#include "local-wifi-creds.h"
 #include "commands.h"
 
 WifiCommChannel::WifiCommChannel()
@@ -7,6 +8,8 @@ WifiCommChannel::WifiCommChannel()
 	broadcast = new IPAddress(255, 255, 255, 255);
 
 	WifiCredentials creds;
+	creds.ssid = Wifi_SSID;
+	creds.password = Wifi_Password
 
 	setConnectionDetails(&creds);
 

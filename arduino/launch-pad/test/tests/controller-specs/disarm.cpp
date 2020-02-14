@@ -17,6 +17,7 @@ TEST_CASE("Disarming") {
 
 	//reset
 	comms.reset();
+	comms.setConnected(true);
 	state.disarm();
 	firingMechanism.reset();
 	stateObserver.setInterlockEngaged(true);

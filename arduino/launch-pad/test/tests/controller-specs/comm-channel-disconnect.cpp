@@ -17,6 +17,7 @@ TEST_CASE("Comm channel disconnect") {
 
 	//reset
 	comms.reset();
+	comms.setConnected(true);
 	state.disarm();
 	firingMechanism.reset();
 	stateObserver.setInterlockEngaged(true);
