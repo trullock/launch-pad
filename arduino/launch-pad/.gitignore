@@ -1,3 +1,4 @@
 build/
 local-wifi-creds.h
-_Resharper.Caches
+_ReSharper.*
+*.resharper.user
