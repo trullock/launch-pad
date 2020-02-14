@@ -9,7 +9,7 @@ WifiCommChannel::WifiCommChannel()
 
 	WifiCredentials creds;
 	creds.ssid = Wifi_SSID;
-	creds.password = Wifi_Password
+	creds.password = Wifi_Password;
 
 	setConnectionDetails(&creds);
 

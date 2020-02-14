@@ -31,7 +31,7 @@ TEST_CASE("Test Continuity") {
 		REQUIRE(comms.getWrittenChar() == Response_Disarmed);
 		REQUIRE(comms.getWrittenChar() == Response_InvalidCommand);
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		// flush
 		for (int i = 0; i < 16; i++)
@@ -63,7 +63,7 @@ TEST_CASE("Test Continuity") {
 		REQUIRE(comms.getWrittenChar() == Response_Disarmed);
 		REQUIRE(comms.getWrittenChar() == Response_InvalidCommand);
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		// flush
 		for (int i = 0; i < 16; i++)

@@ -2,11 +2,11 @@
 
 StateMachine::StateMachine()
 {
-	state = State_Ready;
+	state = State_Disarmed;
 }
 
 bool StateMachine::arm(){
-	if (state == State_Ready)
+	if (state == State_Disarmed)
 	{
 		state = State_Armed;
 		return true;
@@ -17,7 +17,7 @@ bool StateMachine::arm(){
 
 bool StateMachine::disarm()
 {
-	state = State_Ready;
+	state = State_Disarmed;
 	return true;
 }
 

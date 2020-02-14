@@ -17,7 +17,7 @@ void Controller::loop(unsigned long millis)
 {
 	comms->loop(millis);
 
-	if(!comms->isConnected() && state->getState() != State_Ready)
+	if(!comms->isConnected() && state->getState() != State_Disarmed)
 	{
 		Log.println("Controller::loop: Comms channel disconnected, disarming");
 		disarm();

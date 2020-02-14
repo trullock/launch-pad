@@ -40,7 +40,7 @@ TEST_CASE("Comm channel disconnect") {
 		REQUIRE(firingMechanism.wasFired == false);
 		
 		REQUIRE(comms.getWrittenChar() == Response_Disarmed);
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 	}
 	
 	SECTION("Comm channel disconnect during Continuity-test-passed should disarm")
@@ -65,6 +65,6 @@ TEST_CASE("Comm channel disconnect") {
 		REQUIRE(firingMechanism.wasFired == false);
 		
 		REQUIRE(comms.getWrittenChar() == Response_Disarmed);
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 	}
 }

@@ -30,7 +30,7 @@ TEST_CASE("Disarming") {
 		comms.pushReadChar(Command_Disarm);
 		controller.loop(1);
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		// flush
 		for (int i = 0; i < 16; i++)
@@ -52,7 +52,7 @@ TEST_CASE("Disarming") {
 		comms.pushReadChar(Command_Disarm);
 		controller.loop(20);
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		// flush
 		for (int i = 0; i < 16; i++)
@@ -78,7 +78,7 @@ TEST_CASE("Disarming") {
 		comms.pushReadChar(Command_Disarm);
 		controller.loop(21); // 1ms is less than the firing duration
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		// flush
 		for (int i = 0; i < 16; i++)

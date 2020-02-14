@@ -26,7 +26,7 @@ TEST_CASE("State Transitions") {
 		comms.pushReadChar(Command_Arm);
 		controller.loop(0);
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		// flush
 		for (int i = 0; i < 16; i++)
@@ -68,7 +68,7 @@ TEST_CASE("State Transitions") {
 		for (int i = 1; i < 16; i++)
 			controller.loop(i);
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		REQUIRE(continuityTester.wasTested == false);
 		REQUIRE(firingMechanism.wasFired == false);
@@ -90,7 +90,7 @@ TEST_CASE("State Transitions") {
 		for (int i = 2; i < 16; i++)
 			controller.loop(i);
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		REQUIRE(continuityTester.wasTested == false);
 		REQUIRE(firingMechanism.wasFired == false);
@@ -114,7 +114,7 @@ TEST_CASE("State Transitions") {
 		for (int i = 2; i < 16; i++)
 			controller.loop(i);
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		REQUIRE(continuityTester.wasTested == true);
 		REQUIRE(firingMechanism.wasFired == false);
@@ -140,7 +140,7 @@ TEST_CASE("State Transitions") {
 		for (int i = 3; i < 16; i++)
 			controller.loop(i);
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		REQUIRE(continuityTester.wasTested == true);
 		REQUIRE(firingMechanism.wasFired == false);

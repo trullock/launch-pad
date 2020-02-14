@@ -37,7 +37,7 @@ TEST_CASE("Command Timeouts") {
 		REQUIRE(comms.getWrittenChar() == Response_Disarmed);
 		REQUIRE(comms.getWrittenChar() == Response_Timeout);
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 		REQUIRE(firingMechanism.wasFired == false);
 	}
 
@@ -54,7 +54,7 @@ TEST_CASE("Command Timeouts") {
 		REQUIRE(comms.getWrittenChar() == Response_Disarmed);
 		REQUIRE(comms.getWrittenChar() == Response_Timeout);
 
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		// flush
 		for (int i = 0; i < 16; i++)
@@ -83,7 +83,7 @@ TEST_CASE("Command Timeouts") {
 
 		REQUIRE(comms.getWrittenChar() == Response_Disarmed);
 		REQUIRE(comms.getWrittenChar() == Response_Timeout);
-		REQUIRE(state.getState() == State_Ready);
+		REQUIRE(state.getState() == State_Disarmed);
 
 		// flush
 		for (int i = 0; i < 16; i++)
