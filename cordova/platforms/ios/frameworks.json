@@ -1,4 +1,4 @@
 {
-    "Security.framework": 1,
-    "CFNetwork.framework": 1
+    "Security.framework": 2,
+    "CFNetwork.framework": 2
 }

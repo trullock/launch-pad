@@ -55,4 +55,7 @@
     <feature name="ChromeSocketsUdp">
         <param name="ios-package" value="ChromeSocketsUdp" />
     </feature>
+    <feature name="ChromeSocketsTcp">
+        <param name="ios-package" value="ChromeSocketsTcp" />
+    </feature>
 </widget>

@@ -30,5 +30,13 @@
     },
     "is_top_level": false,
     "variables": {}
+  },
+  "cordova-plugin-chrome-apps-sockets-tcp": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-chrome-apps-sockets-tcp"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }

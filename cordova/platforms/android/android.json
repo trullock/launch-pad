@@ -17,6 +17,10 @@
             {
               "xml": "<feature name=\"ChromeSocketsUdp\"><param name=\"android-package\" value=\"org.chromium.ChromeSocketsUdp\" /></feature>",
               "count": 1
+            },
+            {
+              "xml": "<feature name=\"ChromeSocketsTcp\"><param name=\"android-package\" value=\"org.chromium.ChromeSocketsTcp\" /></feature>",
+              "count": 1
             }
           ]
         }
@@ -31,6 +35,9 @@
       "PACKAGE_NAME": "io.cordova.hellocordova"
     },
     "cordova-plugin-chrome-apps-sockets-udp": {
+      "PACKAGE_NAME": "io.cordova.hellocordova"
+    },
+    "cordova-plugin-chrome-apps-sockets-tcp": {
       "PACKAGE_NAME": "io.cordova.hellocordova"
     }
   },
@@ -66,11 +73,20 @@
       "clobbers": [
         "chrome.sockets.udp"
       ]
+    },
+    {
+      "id": "cordova-plugin-chrome-apps-sockets-tcp.sockets.tcp",
+      "file": "plugins/cordova-plugin-chrome-apps-sockets-tcp/sockets.tcp.js",
+      "pluginId": "cordova-plugin-chrome-apps-sockets-tcp",
+      "clobbers": [
+        "chrome.sockets.tcp"
+      ]
     }
   ],
   "plugin_metadata": {
     "cordova-plugin-whitelist": "1.3.4",
     "cordova-plugin-chrome-apps-common": "1.0.7",
-    "cordova-plugin-chrome-apps-sockets-udp": "1.3.0"
+    "cordova-plugin-chrome-apps-sockets-udp": "1.3.0",
+    "cordova-plugin-chrome-apps-sockets-tcp": "1.3.7"
   }
 }

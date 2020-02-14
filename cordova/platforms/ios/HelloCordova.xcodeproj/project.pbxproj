@@ -19,6 +19,7 @@
 		B87C36A667284126BDA483EC /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A378F2F04382463F897729BD /* Security.framework */; };
 		A3FDC57C60D348A790275B86 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4CBEDA6CAC5415EA6C74788 /* CFNetwork.framework */; };
 		BE3E5219A32B4A43ABAC644F /* ChromeSocketsUdp.m in Sources */ = {isa = PBXBuildFile; fileRef = 93CE64382F514C719C99CD00 /* ChromeSocketsUdp.m */; };
+		17C7F95E6FC1467D88112366 /* ChromeSocketsTcp.m in Sources */ = {isa = PBXBuildFile; fileRef = 70884B801DEB45379B9726E7 /* ChromeSocketsTcp.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,8 @@
 		A378F2F04382463F897729BD /* Security.framework */ = {isa = PBXFileReference; name = "Security.framework"; path = "System/Library/Frameworks/Security.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		B4CBEDA6CAC5415EA6C74788 /* CFNetwork.framework */ = {isa = PBXFileReference; name = "CFNetwork.framework"; path = "System/Library/Frameworks/CFNetwork.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		93CE64382F514C719C99CD00 /* ChromeSocketsUdp.m */ = {isa = PBXFileReference; name = "ChromeSocketsUdp.m"; path = "cordova-plugin-chrome-apps-sockets-udp/ChromeSocketsUdp.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		70884B801DEB45379B9726E7 /* ChromeSocketsTcp.m */ = {isa = PBXFileReference; name = "ChromeSocketsTcp.m"; path = "cordova-plugin-chrome-apps-sockets-tcp/ChromeSocketsTcp.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		F97733E180CC4CD9884E5886 /* ChromeSocketsTcp.h */ = {isa = PBXFileReference; name = "ChromeSocketsTcp.h"; path = "cordova-plugin-chrome-apps-sockets-tcp/ChromeSocketsTcp.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +189,8 @@
 				CA3A0275F1634A7E9DD2337F /* GCDAsyncSocket.h */,
 				81FEF5B84E13434BB191459B /* GCDAsyncUdpSocket.h */,
 				93CE64382F514C719C99CD00 /* ChromeSocketsUdp.m */,
+				70884B801DEB45379B9726E7 /* ChromeSocketsTcp.m */,
+				F97733E180CC4CD9884E5886 /* ChromeSocketsTcp.h */,
 			);
 			name = Plugins;
 			path = "HelloCordova/Plugins";
@@ -313,6 +318,7 @@
 				5D7CAF3453814B7585BC6B71 /* GCDAsyncSocket.m in Sources */,
 				19394F88AB9C4A939FFE075E /* GCDAsyncUdpSocket.m in Sources */,
 				BE3E5219A32B4A43ABAC644F /* ChromeSocketsUdp.m in Sources */,
+				17C7F95E6FC1467D88112366 /* ChromeSocketsTcp.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
