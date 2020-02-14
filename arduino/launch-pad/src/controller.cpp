@@ -33,7 +33,7 @@ void Controller::loop(unsigned long millis)
 		return;
 	}
 
-	char command = comms->read();
+	char command = comms->readCommand();
 	if(command == 0)
 		return;
 

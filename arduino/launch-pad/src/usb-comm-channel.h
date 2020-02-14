@@ -8,7 +8,7 @@ class UsbCommChannel : public ICommChannel {
 	  UsbCommChannel();
 	  ~UsbCommChannel() {}
 	  virtual void loop(unsigned long millis);
-	  virtual char read();
+	  virtual char readCommand();
 	  virtual void write(char data);
 	  virtual bool isConnected();
 };

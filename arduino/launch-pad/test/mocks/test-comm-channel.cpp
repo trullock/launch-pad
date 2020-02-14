@@ -21,7 +21,7 @@ void TestCommChannel::reset()
 	connected = false;
 }
 
-char TestCommChannel::read()
+char TestCommChannel::readCommand()
 {
 	return readBuffer[readReadIndex++];
 }

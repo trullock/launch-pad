@@ -12,7 +12,7 @@ TEST_CASE("Reading from USB comm channel") {
 		Serial.pushData(':');
 		Serial.pushData('A');
 
-		char command = comms.read();
+		char command = comms.readCommand();
 
 		REQUIRE(command == 'A');
 	}
@@ -27,10 +27,10 @@ TEST_CASE("Reading from USB comm channel") {
 		Serial.pushData(':');
 		Serial.pushData('B');
 
-		char command1 = comms.read();
+		char command1 = comms.readCommand();
 		REQUIRE(command1 == 'A');
 
-		char command2 = comms.read();
+		char command2 = comms.readCommand();
 		REQUIRE(command2 == 'B');
 	}
 
@@ -40,9 +40,9 @@ TEST_CASE("Reading from USB comm channel") {
 		Serial.reset();
 
 		Serial.pushData(':');
-		comms.read();
+		comms.readCommand();
 		Serial.pushData('B');
-		char command = comms.read();
+		char command = comms.readCommand();
 
 		REQUIRE(command == 'B');
 	}

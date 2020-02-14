@@ -5,7 +5,7 @@ class TestCommChannel : public ICommChannel
 public:
 	TestCommChannel();
 	~TestCommChannel() {};
-	char read();
+	char readCommand();
 	void pushReadChar(char c);
 	void write(char data);
 	char getWrittenChar();

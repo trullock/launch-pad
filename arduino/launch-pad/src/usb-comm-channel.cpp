@@ -14,7 +14,7 @@ void UsbCommChannel::loop(unsigned long millis)
 {
 }
 
-char UsbCommChannel::read()
+char UsbCommChannel::readCommand()
 {
 	if (!Serial.available())
 		return 0;
@@ -25,7 +25,7 @@ char UsbCommChannel::read()
 		if (Serial.read() == ':')
 		{
 			preambleFound = 1;
-			return this->read();
+			return this->readCommand();
 		}
 
 		return 0;

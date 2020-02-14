@@ -162,7 +162,7 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 	return tcpClientConnected;
 }
 
-char WifiCommChannel::read()
+char WifiCommChannel::readCommand()
 {
 	char command = Command_Null;
 
