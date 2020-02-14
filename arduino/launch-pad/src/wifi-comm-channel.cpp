@@ -68,7 +68,6 @@ void WifiCommChannel::beacon(unsigned long millis)
 		udp.beginPacket(*broadcast, 4321);
 		udp.write(beaconPacket);
 		udp.endPacket();
-		udp.flush();
 
 		lastEventMillis = millis;
 	}

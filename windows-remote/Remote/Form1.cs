@@ -124,7 +124,7 @@ namespace Remote
 			//this.udpClient.ExclusiveAddressUse = true;
 			this.udpClient.Client.Bind(this.broadcastAddress);
 
-			this.udpClient.BeginReceive(this.ReceiveCallback, null);
+			this.udpClient.BeginReceive(this.ReceiveUdp, null);
 		}
 
 		void ConnectTCP(string hostname)
@@ -187,47 +187,20 @@ namespace Remote
 				SetText("Error..... " + e.StackTrace);
 			}
 		}
-		void ReceiveCallback(IAsyncResult ar)
+		void ReceiveUdp(IAsyncResult ar)
 		{
 			var from = new IPEndPoint(IPAddress.Any, 4321);
 			var buffer = this.udpClient.EndReceive(ar, ref from);
 			var data = Encoding.ASCII.GetString(buffer);
 
-			if (data == "helloo")
+			if (data == "hello")
 			{
-				IPAddress ipAd = IPAddress.Parse("192.168.2.114");
-
-				/* Initializes the Listener */
-				// TcpListener myList=new TcpListener(IPAddress.Any,8001);
-				TcpListener myList = new TcpListener(ipAd, 4321);
-
-				/* Start Listeneting at the specified port */
-				myList.Start();
-
-				Console.WriteLine("The server is running at port 8001...");
-				Console.WriteLine("The local End point is  :" +				                  myList.LocalEndpoint);
-				Console.WriteLine("Waiting for a connection.....");
-
-				Socket s = myList.AcceptSocket();
-				Console.WriteLine("Connection accepted from " + s.RemoteEndPoint);
-
-				byte[] b = new byte[100];
-				int k = s.Receive(b);
-				Console.WriteLine("Recieved...");
-				for (int i = 0; i < k; i++)
-					Console.Write(Convert.ToChar(b[i]));
-
-				ASCIIEncoding asen = new ASCIIEncoding();
-				s.Send(asen.GetBytes("The string was recieved by the server."));
-				Console.WriteLine("\nSent Acknowledgement");
-				/* clean up */
-				s.Close();
-				myList.Stop();
+				//ConnectTCP(from.Address.ToString());
 			}
 
-			SetText(from.ToString() + ": " + data + "\r\n");
+			SetText("UDP: " + from.ToString() + ": " + data + "\r\n");
 
-			this.udpClient.BeginReceive(this.ReceiveCallback, null);
+			this.udpClient.BeginReceive(this.ReceiveUdp, null);
 		}
 
 		private void button1_Click(object sender, EventArgs e)

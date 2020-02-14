@@ -34,7 +34,7 @@ private:
 	WiFiServer* tcp;
 	WiFiClient tcpClient;
 	IPAddress* broadcast;
-	char beaconPacket[6] = {'h', 'e', 'l', 'l', 'o' };
+	const char* beaconPacket = "hello";
 
 	void connect(unsigned long millis);
 	void disconnect();
