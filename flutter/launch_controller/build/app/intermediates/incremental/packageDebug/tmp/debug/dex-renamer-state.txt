@@ -1,0 +1,4 @@
+#Fri Jan 31 13:07:36 GMT 2020
+base.0=C\:\\Users\\trull\\git\\launch-pad\\flutter\\launch_controller\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

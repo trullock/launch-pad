@@ -33,3 +33,8 @@ body
 	height: 100%;
 	overflow: scroll;
 }
+
+button
+{
+	padding: 20px 15px;
+}
