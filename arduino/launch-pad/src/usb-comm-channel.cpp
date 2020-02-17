@@ -36,9 +36,11 @@ char UsbCommChannel::readCommand()
 	return command;
 }
 
-void UsbCommChannel::writeResponse(char response)
+void UsbCommChannel::writeStatus(char response, Status state)
 {
-	Serial.println(response);
+	Serial.print(response);
+	Serial.print(state.state);
+	Serial.println(state.interlockEnabled ? '0' : '1');
 }
 
 bool UsbCommChannel::isConnected()

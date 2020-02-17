@@ -36,6 +36,13 @@ void TestCommChannel::writeResponse(char response)
 	writeBuffer[writeWriteIndex++] = response;
 }
 
+void TestCommChannel::writeStatus(char response, Status state)
+{
+	writeResponse(response);
+	writeResponse(state.state);
+	writeResponse(state.interlockEnabled ? 1 : 0);
+}
+
 char TestCommChannel::getWrittenChar()
 {
 	return writeBuffer[writeReadIndex++];

@@ -8,6 +8,7 @@ public:
 	char readCommand();
 	void pushReadChar(char c);
 	void writeResponse(char response);
+	void writeStatus(char response, Status state);
 	char getWrittenChar();
 	char getLastChar();
 	void reset();

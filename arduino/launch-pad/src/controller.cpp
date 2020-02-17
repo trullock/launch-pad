@@ -1,5 +1,5 @@
 #include "controller.h"
-
+#include "status.h"
 
 Controller::Controller(ICommChannel* c, StateMachine* s, IContinuityTester* ct, IFiringMechanism* fm, IStateObserver* so)
 {
@@ -20,7 +20,7 @@ void Controller::loop(unsigned long millis)
 	if(!comms->isConnected() && state->getState() != State_Disarmed)
 	{
 		Log.println("Controller::loop: Comms channel disconnected, disarming");
-		disarm();
+		disarm(Response_CommChannelDisconnect, millis);
 		return;
 	}
 	
@@ -29,13 +29,16 @@ void Controller::loop(unsigned long millis)
 	if (haveTimedOut(millis))
 	{
 		Log.println("Controller::loop: Command timeout elapsed, disarming");
-		timeout();
+		timeout(millis);
 		return;
 	}
 
 	char command = comms->readCommand();
-	if(command == 0)
+	if(command == Command_Null)
+	{
+		reportStatusBeacon(millis);
 		return;
+	}
 
 	Log.print("Controller::loop: Handling command: ");
 	Log.println(command);
@@ -58,6 +61,25 @@ bool Controller::haveTimedOut(unsigned long millis)
 	return false;
 }
 
+void Controller::reportStatusBeacon(unsigned long millis) 
+{
+	if (lastReportMillis + ReportStatusBeaconIntervalMillis > millis)
+		return;
+
+	reportStatus(Response_Beacon, millis);
+}
+
+void Controller::reportStatus(char response, unsigned long millis)
+{
+	lastReportMillis = millis;
+	
+	Status st;
+	st.interlockEnabled = stateObserver->interlockEngaged();
+	st.state = state->getState();
+
+	comms->writeStatus(response, st);
+}
+
 void Controller::handleCommand(char command, unsigned long millis)
 {
 	lastCommandMillis = millis;
@@ -65,19 +87,23 @@ void Controller::handleCommand(char command, unsigned long millis)
 	switch (command)
 	{
 		case Command_Arm:
-			arm();
+			arm(millis);
 			break;
 
 		case Command_Disarm:
-			disarm();
+			disarm(Response_Disarmed, millis);
 			break;
 
 		case Command_TestContinuity:
-			testContinuity();
+			testContinuity(millis);
 			break;
 
 		case Command_Fire:
 			fire(millis);
+			break;
+
+		default:
+			reportStatusBeacon(millis);
 			break;
 	}
 }
@@ -95,8 +121,7 @@ void Controller::checkState(unsigned long millis)
 			if (!stateObserver->interlockEngaged())
 			{
 				Log.println("Controller::checkState: Interlock disengaged in required state, disarming");
-				disarm();
-				comms->writeResponse(Response_InvalidState);
+				disarm(Response_InterlockDisengaged, millis);
 			}
 	}
 
@@ -108,8 +133,7 @@ void Controller::checkState(unsigned long millis)
 			if (!continuityTester->test())
 			{
 				Log.println("Controller::checkState: Continutity broken, disarming");
-				disarm();
-				comms->writeResponse(Response_InvalidState);
+				disarm(Response_ContinuityFailed, millis);
 			}
 	}
 
@@ -117,45 +141,41 @@ void Controller::checkState(unsigned long millis)
 	if (currentState != State_Firing && stateObserver->firingMechanismEngaged())
 	{
 		Log.println("Controller::checkState: Firing mechanism enabled in unexpected state, disarming");
-		disarm();
-		comms->writeResponse(Response_InvalidState);
+		disarm(Response_FiringMechanismEngaged, millis);
 	}
 
 	// check firing duration
 	if(currentState == State_Firing && firingStartedMillis + FireDurationMillis <= millis)
 	{
 		Log.println("Controller::checkState: Firing duration elapsed, disarming");
-		disarm();
-	
+		disarm(Response_Disarmed, millis);
 	}
 }
 
-void Controller::arm()
+void Controller::arm(unsigned long millis)
 {
 	Log.println("Controller::arm: Attempting to Arm");
 
 	if (!stateObserver->interlockEngaged())
 	{
 		Log.println("Controller::arm: Cannot arm, interlock not engaged. Disarming");
-		disarm();
-		comms->writeResponse(Response_InvalidState);
-		// interlock not engaged
+		disarm(Response_InterlockDisengaged, millis);
 		return;
 	}
 
 	if(state->arm())
 	{
 		Log.println("Controller::arm: Arming successful");
-		comms->writeResponse(Response_Armed);
+		reportStatus(Response_Armed, millis);
 	}
 	else
 	{
 		Log.println("Controller::arm: Arming unsuccessful, not a valid command in this state");
-		comms->writeResponse(Response_InvalidCommand);
+		reportStatus(Response_InvalidCommand, millis);
 	}
 }
 
-void Controller::disarm()
+void Controller::disarm(char reason, unsigned long millis)
 {
 	Log.println("Controller::disarm: Attempting to Disarm");
 
@@ -164,30 +184,28 @@ void Controller::disarm()
 	if(state->disarm())
 	{
 		Log.println("Controller::disarm: Disarm successful");
-		comms->writeResponse(Response_Disarmed);
+		reportStatus(reason, millis);
 	}
 	else
 	{
 		Log.println("Controller::disarm: Disarm unsuccessful, not a valid command in this state");
-		comms->writeResponse(Response_InvalidCommand);
+		reportStatus(Response_InvalidCommand, millis);
 	}
 }
 
-void Controller::timeout()
+void Controller::timeout(unsigned long millis)
 {
-	disarm();
-	comms->writeResponse(Response_Timeout);
+	disarm(Response_Timeout, millis);
 }
 
-void Controller::testContinuity()
+void Controller::testContinuity(unsigned long millis)
 {
 	Log.println("Controller::testContinuity: Attempting to Test Continuity");
 
 	if(!state->canTestContinuity())
 	{
-		disarm();
+		disarm(Response_InvalidCommand, millis);
 		Log.println("Controller::testContinuity: Testing unsuccessful, not a valid command in this state");
-		comms->writeResponse(Response_InvalidCommand);
 		return;
 	}
 
@@ -197,20 +215,18 @@ void Controller::testContinuity()
 
 		if(state->passContinuity())
 		{
+			reportStatus(Response_ContinuityPassed, millis);
 			Log.println("Controller::testContinuity: Continuity Test successful");
-			comms->writeResponse(Response_ContinuityPassed);
 			return;
 		}
 
 		Log.println("Controller::testContinuity: Continuity Test unsuccessful, not a valid command in this state");
-		disarm();
-		comms->writeResponse(Response_Error);
+		disarm(Response_Error, millis);
 		return;
 	}
 
-	disarm();
+	disarm(Response_ContinuityFailed, millis);
 	Log.println("Controller::testContinuity: Continuity Test failed, disarming");
-	comms->writeResponse(Response_ContinuityFailed);
 }
 
 void Controller::fire(unsigned long millis)
@@ -220,13 +236,12 @@ void Controller::fire(unsigned long millis)
 	if(!state->fire())
 	{
 		Log.println("Controller::fire: Firing initiation unsuccessful, not a valid command in this state");
-		disarm();
-		comms->writeResponse(Response_InvalidCommand);
+		disarm(Response_InvalidCommand, millis);
 		return;
 	}
 
 	firingStartedMillis = millis;
 	firingMechanism->fire();
 	Log.println("Controller::fire: Firing initiation successful");
-	comms->writeResponse(Response_Firing);
+	reportStatus(Response_Firing, millis);
 }

@@ -38,12 +38,30 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "clobbers": [
         "chrome.sockets.tcp"
       ]
+    },
+    {
+      "id": "cordova-plugin-splashscreen.SplashScreen",
+      "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+      "pluginId": "cordova-plugin-splashscreen",
+      "clobbers": [
+        "navigator.splashscreen"
+      ]
+    },
+    {
+      "id": "cordova-plugin-fingerprint-aio.Fingerprint",
+      "file": "plugins/cordova-plugin-fingerprint-aio/www/Fingerprint.js",
+      "pluginId": "cordova-plugin-fingerprint-aio",
+      "clobbers": [
+        "Fingerprint"
+      ]
     }
   ];
   module.exports.metadata = {
     "cordova-plugin-whitelist": "1.3.4",
     "cordova-plugin-chrome-apps-common": "1.0.7",
     "cordova-plugin-chrome-apps-sockets-udp": "1.3.0",
-    "cordova-plugin-chrome-apps-sockets-tcp": "1.3.7"
+    "cordova-plugin-chrome-apps-sockets-tcp": "1.3.7",
+    "cordova-plugin-splashscreen": "5.0.3",
+    "cordova-plugin-fingerprint-aio": "3.0.1"
   };
 });

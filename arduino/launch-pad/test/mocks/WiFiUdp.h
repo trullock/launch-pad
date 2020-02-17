@@ -11,6 +11,7 @@ class WiFiUDP
 		int endPacket();
 		void flush();
 		void write(char *buff);
+		void write(const char *buff);
 };
 
 #endif

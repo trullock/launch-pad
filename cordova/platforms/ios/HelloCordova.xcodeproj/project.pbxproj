@@ -20,6 +20,9 @@
 		A3FDC57C60D348A790275B86 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4CBEDA6CAC5415EA6C74788 /* CFNetwork.framework */; };
 		BE3E5219A32B4A43ABAC644F /* ChromeSocketsUdp.m in Sources */ = {isa = PBXBuildFile; fileRef = 93CE64382F514C719C99CD00 /* ChromeSocketsUdp.m */; };
 		17C7F95E6FC1467D88112366 /* ChromeSocketsTcp.m in Sources */ = {isa = PBXBuildFile; fileRef = 70884B801DEB45379B9726E7 /* ChromeSocketsTcp.m */; };
+		D91E92B3B5B641BBBBD99617 /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = C789F5F8D9654E3B96743933 /* CDVSplashScreen.m */; };
+		A402ECD480BA411882CAF0FE /* CDVViewController+SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AAEE6A5FA3D4BE08BCF108F /* CDVViewController+SplashScreen.m */; };
+		1B1173DE3458422797445697 /* Fingerprint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D11564FEC2924595B5039992 /* Fingerprint.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +79,12 @@
 		93CE64382F514C719C99CD00 /* ChromeSocketsUdp.m */ = {isa = PBXFileReference; name = "ChromeSocketsUdp.m"; path = "cordova-plugin-chrome-apps-sockets-udp/ChromeSocketsUdp.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		70884B801DEB45379B9726E7 /* ChromeSocketsTcp.m */ = {isa = PBXFileReference; name = "ChromeSocketsTcp.m"; path = "cordova-plugin-chrome-apps-sockets-tcp/ChromeSocketsTcp.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		F97733E180CC4CD9884E5886 /* ChromeSocketsTcp.h */ = {isa = PBXFileReference; name = "ChromeSocketsTcp.h"; path = "cordova-plugin-chrome-apps-sockets-tcp/ChromeSocketsTcp.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		C789F5F8D9654E3B96743933 /* CDVSplashScreen.m */ = {isa = PBXFileReference; name = "CDVSplashScreen.m"; path = "cordova-plugin-splashscreen/CDVSplashScreen.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		8AAEE6A5FA3D4BE08BCF108F /* CDVViewController+SplashScreen.m */ = {isa = PBXFileReference; name = "CDVViewController+SplashScreen.m"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		31BA594EDAD2454F8FF46718 /* CDVSplashScreen.h */ = {isa = PBXFileReference; name = "CDVSplashScreen.h"; path = "cordova-plugin-splashscreen/CDVSplashScreen.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		622C822DE77F4B16844A3BD6 /* CDVViewController+SplashScreen.h */ = {isa = PBXFileReference; name = "CDVViewController+SplashScreen.h"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		D11564FEC2924595B5039992 /* Fingerprint.swift */ = {isa = PBXFileReference; name = "Fingerprint.swift"; path = "cordova-plugin-fingerprint-aio/Fingerprint.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
+		1CDB3FB826D5477EB5244339 /* Bridging-Header.h */ = {isa = PBXFileReference; name = "Bridging-Header.h"; path = "cordova-plugin-fingerprint-aio/Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +200,12 @@
 				93CE64382F514C719C99CD00 /* ChromeSocketsUdp.m */,
 				70884B801DEB45379B9726E7 /* ChromeSocketsTcp.m */,
 				F97733E180CC4CD9884E5886 /* ChromeSocketsTcp.h */,
+				C789F5F8D9654E3B96743933 /* CDVSplashScreen.m */,
+				8AAEE6A5FA3D4BE08BCF108F /* CDVViewController+SplashScreen.m */,
+				31BA594EDAD2454F8FF46718 /* CDVSplashScreen.h */,
+				622C822DE77F4B16844A3BD6 /* CDVViewController+SplashScreen.h */,
+				D11564FEC2924595B5039992 /* Fingerprint.swift */,
+				1CDB3FB826D5477EB5244339 /* Bridging-Header.h */,
 			);
 			name = Plugins;
 			path = "HelloCordova/Plugins";
@@ -319,6 +334,9 @@
 				19394F88AB9C4A939FFE075E /* GCDAsyncUdpSocket.m in Sources */,
 				BE3E5219A32B4A43ABAC644F /* ChromeSocketsUdp.m in Sources */,
 				17C7F95E6FC1467D88112366 /* ChromeSocketsTcp.m in Sources */,
+				D91E92B3B5B641BBBBD99617 /* CDVSplashScreen.m in Sources */,
+				A402ECD480BA411882CAF0FE /* CDVViewController+SplashScreen.m in Sources */,
+				1B1173DE3458422797445697 /* Fingerprint.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -25,6 +25,7 @@ void Serial_::pushData(int data){
 	bufferSize++;
 }
 
+void Serial_::print(char c) {}
 void Serial_::println(char c) { }
 void Serial_::println(const char c[]) {}
 void Serial_::println(String s) {}

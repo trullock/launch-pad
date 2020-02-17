@@ -15,6 +15,12 @@
     },
     "cordova-plugin-chrome-apps-sockets-tcp": {
       "PACKAGE_NAME": "io.cordova.hellocordova"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "space.trullock_aero.launch_remote"
+    },
+    "cordova-plugin-fingerprint-aio": {
+      "PACKAGE_NAME": "space.trullock_aero.launch_remote"
     }
   },
   "dependent_plugins": {

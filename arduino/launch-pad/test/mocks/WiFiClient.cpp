@@ -19,7 +19,7 @@ void WiFiClient::stop()
 {
 }
 
-void WiFiClient::keepAlive()
+void WiFiClient::keepAlive(int idle_sec, int interval_sec, int count)
 {
 }
 
@@ -39,4 +39,8 @@ int WiFiClient::status()
 size_t WiFiClient::readBytes(char *buffer, size_t length)
 {
 	return 0;
+}
+
+void WiFiClient::setDefaultNoDelay(bool noDelay)
+{
 }

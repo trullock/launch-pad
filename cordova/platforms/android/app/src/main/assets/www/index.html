@@ -10,21 +10,33 @@
     </head>
     <body>
         <div class="app">
-			<div id="page1" class="page">
-				<button id="btnDiscoverPad">Discover Pad</button>
-				<button id="btnConnect">Connect</button>
-			</div>
 			<div id="pgCommand" class="page">
-				<button id="btnArm">Arm</button>
-				<button id="btnTestContinuity">Test Continuity</button>
-				<button id="btnDisarm">Disarm</button>
-				<button id="btnFire">Fire</button>
+				<img src="img/rocket.png" class="logo">
+				<div class="status">
+					<div class="interlock">
+						<span>Interlock Status:</span>
+						<span class="state">Disengaged</span>
+					</div>
+					<div class="command-timeout">
+						<span>Command Timeout:</span>
+						<span class="state">0s</span>
+					</div>
+				</div>
+				<button id="btnDisarm" class="green">Disarm</button>
+				<button id="btnArm" class="blue">Arm</button>
+				<button id="btnTestContinuity" class="yellow">Test Continuity</button>
+				<button id="btnFire" class="orange">Fire</button>
 			</div>
 			<div id="pgConsole" class="page">
 				<pre></pre>
 			</div>
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="js/state.js"></script>
+		<script type="text/javascript" src="js/pubsub.js"></script>
+		<script type="text/javascript" src="js/network.js"></script>
+		<script type="text/javascript" src="js/view.js"></script>
+		<script type="text/javascript" src="js/controller.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
     </body>
 </html>

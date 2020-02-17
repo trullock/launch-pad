@@ -22,3 +22,7 @@ void WiFiUDP::flush()
 void WiFiUDP::write(char *buff)
 {
 }
+
+void WiFiUDP::write(const char *buff)
+{
+}

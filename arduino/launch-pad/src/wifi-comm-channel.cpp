@@ -15,6 +15,8 @@ WifiCommChannel::WifiCommChannel()
 
 	lastEventMillis = 0;
 	lastTcpEventMillis = 0;
+
+	WiFiClient::setDefaultNoDelay(true);
 }
 
 void WifiCommChannel::setConnectionDetails(WifiCredentials* creds)
@@ -82,7 +84,7 @@ void WifiCommChannel::connect(unsigned long millis)
 
 char WifiCommChannel::parseCommand(char *buffer)
 {
-	Log.println(buffer);
+	//Log.println(buffer);
 
 	if(strcmp("Arm", buffer) == 0)
 		return Command_Arm;
@@ -119,12 +121,12 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 
 	if (prevClientDisconnected)
 		tcpClient = tcp->available();
-
+	
 	if (tcpClient.connected())
 	{
 		if(prevClientDisconnected)
 		{
-			tcpClient.keepAlive();
+			tcpClient.keepAlive(1, 1, 3);
 			tcpClientConnected = true;
 			lastTcpEventMillis = millis;
 
@@ -137,7 +139,7 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 			// this supports command and heartbeat timeout detection
 			lastTcpEventMillis = millis;
 
-			Log.println("WifiCommChannel::checkTcpState: TCP data available");
+			//Log.println("WifiCommChannel::checkTcpState: TCP data available");
 		}
 	}
 
@@ -150,13 +152,13 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 	}
 
 	// check for application layer TCP timeout
-	if (tcpClientConnected && lastTcpEventMillis + Wifi_Tcp_Connection_TimeoutMillis <= millis)
-	{
-		tcpClient.stop();
-		tcpClientConnected = false;
-
-		Log.println("WifiCommChannel::checkTcpState: Application layer keepalive timeout");
-	}
+	//if (tcpClientConnected && lastTcpEventMillis + Wifi_Tcp_Connection_TimeoutMillis <= millis)
+	//{
+	//	tcpClient.stop();
+	//	tcpClientConnected = false;
+	//
+	//	Log.println("WifiCommChannel::checkTcpState: Application layer keepalive timeout");
+	//}
 
 	return tcpClientConnected;
 }
@@ -169,9 +171,9 @@ char WifiCommChannel::readCommand()
 
 	if (tcpClient.connected() && availableBytes > 0)
 	{
-		Log.println("WifiCommChannel::read: Client is connected and data is available");
-		Log.print("WifiCommChannel::read: available bytes: ");
-		Log.println(availableBytes);
+		//Log.println("WifiCommChannel::read: Client is connected and data is available");
+		//Log.print("WifiCommChannel::read: available bytes: ");
+		//Log.println(availableBytes);
 
 		char buffer[availableBytes];
 		memset(buffer, 0x0, availableBytes);
@@ -180,18 +182,34 @@ char WifiCommChannel::readCommand()
 		command = parseCommand(buffer);
 
 		Log.print("WifiCommChannel::read: Command received: ");
-		Log.println(command);
+		Log.println(command == '\0' ? '0' : command);
 	}
 
 	return command;
 }
 
-void WifiCommChannel::writeResponse(char response)
+void WifiCommChannel::writeStatus(char response, Status state)
 {
-	if(!isConnected())
+	if (!isConnected())
 		return;
+	
+	if(false)
+	{
+		Log.print("WifiCommChannel::writeStatus: Response: ");
+		Log.print(response == '\0' ? '0' : response);
+		Log.print(", State: ");
+		Log.print(state.state);
+		Log.print(", InterlockEnabled: ");
+		Log.println(state.interlockEnabled);
+	}
 
-	tcpClient.write(response);
+	char buffer[4];
+	buffer[0] = response;
+	buffer[1] = state.state;
+	buffer[2] = state.interlockEnabled ? '1' : '0';
+	buffer[3] = '\0';
+
+	tcpClient.write(buffer);
 	tcpClient.flush();
 	yield();
 }

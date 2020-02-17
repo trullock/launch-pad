@@ -18,6 +18,7 @@ public:
 	void println(String s);
 	void println(String* s);
 	void print(const char c[]);
+	void print(char c);
 
 private:
 	int buffer[16];

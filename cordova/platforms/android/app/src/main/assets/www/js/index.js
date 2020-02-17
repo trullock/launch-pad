@@ -6,55 +6,27 @@ var app = {
     onDeviceReady: function() {
 		var me = this;
 
-		me.pgConsole = document.querySelector('#pgConsole');
-		me.txtConsole = me.pgConsole.querySelector('pre');
+		network.listenForUdpBeacon().then(remoteAddress => {
+			console.log(remoteAddress);
 
-		document.querySelector('#btnDiscoverPad').addEventListener('click', function(e){
-			e.preventDefault();
-
-			chrome.sockets.udp.create({}, function (socketInfo) {
-				me.udpSocketId = socketInfo.socketId;
-
-				chrome.sockets.udp.onReceive.addListener(info => me.udpReceive(info));
-				chrome.sockets.udp.bind(me.udpSocketId, "0.0.0.0", 4321, function (result) {
-					if (result < 0) {
-						console.log("Error binding socket.");
-						return;
-					}
+			network.onTcpReceive = function (str) {
+				var event = str[0];
+				var state = str[1];
+				var interlockEngaged = str[2] == '1';
+				window.bus.publish('state change', {
+					state: state,
+					interlockEngaged: interlockEngaged,
+					event: event
 				});
-			});
+			}
+
+			return network.tcpConnect(remoteAddress);
+		}).then(function(result){
+			return network.tcpSend('Hello');
+		}).then(function(){
+			navigator.splashscreen.hide();
 		});
-
-		document.querySelector('#btnConnect').addEventListener('click', function (e) {
-			e.preventDefault();
-
-			chrome.sockets.tcp.create({}, function (socketInfo) {
-				me.tcpSocketId = socketInfo.socketId;
-				chrome.sockets.tcp.setKeep
-				chrome.sockets.tcp.onReceive.addListener(info => me.tcpReceive(info));
-				chrome.sockets.udp.bind(me.socketId, "0.0.0.0", 4321, function (result) {
-					if (result < 0) {
-						console.log("Error binding socket.");
-						return;
-					}
-				});
-			});
-		});
-
-
-    },
-
-	udpReceive: function (info) {
-		if (info.socketId !== this.udpSocketId)
-			return;
-		console.log(String.fromCharCode.apply(null, new Uint8Array(info.data)));
-		this.consoleLog(String.fromCharCode.apply(null, new Uint8Array(info.data)))
-	},
-
-	consoleLog: function(data){
-		this.txtConsole.innerText += (new Date()).toISOString() + ": " + data + "\r\n";
-		this.txtConsole.scrollTop = this.txtConsole.scrollHeight;
-	}
+    }
 };
 
 app.initialize();

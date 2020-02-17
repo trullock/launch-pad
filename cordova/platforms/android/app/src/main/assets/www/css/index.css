@@ -12,14 +12,20 @@ body
     padding: 0px;
     /* Padding to avoid the "unsafe" areas behind notches in the screen */
     padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-right, 0px);
-    text-transform:uppercase;
-    width: 100%;
+	width: 100%;
+	
+	font-size: 1em;
 }
 
 .app
 {
 	width: 100%;
 	height: 100%;
+}
+
+.page
+{
+	padding: 20px;
 }
 
 .hidden
@@ -37,4 +43,61 @@ body
 button
 {
 	padding: 20px 15px;
+	border: solid 1px #ccc;
+	display: block;
+	width: 100%;
+	margin-bottom: 5px;
+}
+
+button:disabled
+{
+	background: #ececf1 !important;
+	border-color: #e2e2e7 !important;
+}
+
+button.blue
+{
+	background: #76e2f8;
+	border-color: #25d9f8;
+}
+
+button.orange
+{
+	background: #ff9f00;
+	border-color: #ff7816;
+}
+
+button.yellow
+{
+	background: #ffe470;
+	border-color: #ffd400;
+}
+button.green
+{
+	background: #70ff77;
+	border-color: #00ff0c;
+}
+
+div.status div
+{
+	padding-bottom: 5px;
+	border-bottom: solid 2px #25d9f8;
+	margin-bottom: 20px;
+}
+
+div.status div.green
+{
+	border-bottom-color: #00ff0c;
+}
+div.status div.red
+{
+	border-bottom-color: #ff7816;
+}
+
+img.logo
+{
+	width: 50px;
+	height: 50px;
+	display: block;
+	margin-bottom: 20px;
 }

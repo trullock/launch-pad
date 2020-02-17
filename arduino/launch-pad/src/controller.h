@@ -18,9 +18,15 @@
 #define Response_ContinuityPassed 'C'
 #define Response_Firing 'F'
 #define Response_Timeout 'T'
+#define Response_CommChannelDisconnect 'X'
+#define Response_InterlockDisengaged 'L'
+#define Response_FiringMechanismEngaged 'M'
+#define Response_Beacon 'B'
 
 #define CommandTimeoutMillis 20 * 1000
 #define FireDurationMillis 3 * 1000
+
+#define ReportStatusBeaconIntervalMillis 250
 
 class Controller {
 	public:
@@ -33,16 +39,20 @@ class Controller {
 		IFiringMechanism* firingMechanism;
 		IStateObserver* stateObserver;
 
-		void arm();
-		void disarm();
-		void testContinuity();
+		void arm(unsigned long millis);
+		void disarm(char reason, unsigned long millis);
+		void testContinuity(unsigned long millis);
 		void fire(unsigned long millis);
-		void timeout();
+		void timeout(unsigned long millis);
 		void handleCommand(char command, unsigned long millis);
 
 		void checkState(unsigned long millis);
 		bool haveTimedOut(unsigned long millis);
 
+		void reportStatusBeacon(unsigned long millis);
+		void reportStatus(char response, unsigned long millis);
+
+		unsigned long lastReportMillis;
 		unsigned long lastCommandMillis;
 		unsigned long firingStartedMillis;
 };
