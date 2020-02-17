@@ -46,6 +46,12 @@ class CommandPage extends Page
 		this.$interlockState = this.$el.querySelector('div.status .interlock');
 		this.$interlockStateMessage = this.$interlockState.querySelector('span.state');
 
+		this.$firingMechanism = this.$el.querySelector('div.status .firing-mechanism');
+		this.$firingMechanismMessage = this.$firingMechanism.querySelector('span.state');
+
+		this.$padStatus = this.$el.querySelector('div.status .pad-status');
+		this.$padStatusMessage = this.$padStatus.querySelector('span.state');
+
 		this.$commandTimeoutState = this.$el.querySelector('div.status .command-timeout');
 		this.$commandTimeoutStateMessage = this.$commandTimeoutState.querySelector('span.state');
 
@@ -55,6 +61,7 @@ class CommandPage extends Page
 
 		this.setState({
 			interlockEngaged: false,
+			firingMechanismEngaged: false,
 			state: STATE_DISARMED,
 			event: 0
 		});
@@ -116,6 +123,7 @@ class CommandPage extends Page
 
 	setState(state) {
 		this.setInterlockState(state.interlockEngaged);
+		this.setFiringMechanism(state.firingMechanismEngaged);
 
 		this.disableAllButtons();
 
@@ -158,6 +166,19 @@ class CommandPage extends Page
 		}
 	}
 
+	setFiringMechanism(engaged) {
+		if (engaged) {
+			this.$firingMechanismMessage.innerText = "Engaged 🔥"
+			this.$firingMechanism.classList.add('red');
+			this.$firingMechanism.classList.remove('green');
+		}
+		else {
+			this.$firingMechanismMessage.innerText = "Disengaged ❌"
+			this.$firingMechanism.classList.remove('red');
+			this.$firingMechanism.classList.add('green');
+		}
+	}
+
 	disableAllButtons()
 	{
 		this.$btnArm.disabled = true;
@@ -169,23 +190,38 @@ class CommandPage extends Page
 	disarm()
 	{
 		this.$btnArm.disabled = false;
+
+		this.$padStatus.classList.remove('red', 'green', 'yellow');
+		this.$padStatusMessage.innerText = "Disarmed";
 	}
 
 	arm()
 	{
 		this.$btnTestContinuity.disabled = false;
 		this.$btnDisarm.disabled = false;
+
+		this.$padStatus.classList.remove('red', 'green', 'yellow');
+		this.$padStatus.classList.add('green');
+		this.$padStatusMessage.innerText = "Armed";
 	}
 
 	passContinuityTest()
 	{
 		this.$btnFire.disabled = false;
 		this.$btnDisarm.disabled = false;
+
+		this.$padStatus.classList.remove('red', 'green', 'yellow');
+		this.$padStatus.classList.add('yellow');
+		this.$padStatusMessage.innerText = "Passed Continuity Test";
 	}
 
 	fire()
 	{
 		this.$btnDisarm.disabled = false;
+
+		this.$padStatus.classList.remove('red', 'green', 'yellow');
+		this.$padStatus.classList.add('red');
+		this.$padStatusMessage.innerText = "Firing";
 	}
 }
 

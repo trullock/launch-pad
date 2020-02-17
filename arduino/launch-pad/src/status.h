@@ -3,7 +3,8 @@
 
 struct Status
 {
-	bool interlockEnabled;
+	bool interlockEngaged;
+	bool firingMechanismEngaged;
 	char state;
 };
 

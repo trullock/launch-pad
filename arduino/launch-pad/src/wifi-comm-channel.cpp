@@ -199,15 +199,18 @@ void WifiCommChannel::writeStatus(char response, Status state)
 		Log.print(response == '\0' ? '0' : response);
 		Log.print(", State: ");
 		Log.print(state.state);
-		Log.print(", InterlockEnabled: ");
-		Log.println(state.interlockEnabled);
+		Log.print(", InterlockEngaged: ");
+		Log.print(state.interlockEngaged);
+		Log.print(", FiringMechanismEngaged: ");
+		Log.println(state.firingMechanismEngaged);
 	}
 
-	char buffer[4];
+	char buffer[5];
 	buffer[0] = response;
 	buffer[1] = state.state;
-	buffer[2] = state.interlockEnabled ? '1' : '0';
-	buffer[3] = '\0';
+	buffer[2] = state.interlockEngaged ? '1' : '0';
+	buffer[3] = state.firingMechanismEngaged ? '1' : '0';
+	buffer[4] = '\0';
 
 	tcpClient.write(buffer);
 	tcpClient.flush();

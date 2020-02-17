@@ -13,9 +13,11 @@ var app = {
 				var event = str[0];
 				var state = str[1];
 				var interlockEngaged = str[2] == '1';
+				var firingMechanismEngaged = str[3] == '1';
 				window.bus.publish('state change', {
 					state: state,
 					interlockEngaged: interlockEngaged,
+					firingMechanismEngaged: firingMechanismEngaged,
 					event: event
 				});
 			}

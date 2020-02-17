@@ -74,7 +74,8 @@ void Controller::reportStatus(char response, unsigned long millis)
 	lastReportMillis = millis;
 	
 	Status st;
-	st.interlockEnabled = stateObserver->interlockEngaged();
+	st.interlockEngaged = stateObserver->interlockEngaged();
+	st.firingMechanismEngaged = stateObserver->firingMechanismEngaged();
 	st.state = state->getState();
 
 	comms->writeStatus(response, st);

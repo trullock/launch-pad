@@ -89,6 +89,10 @@ div.status div.green
 {
 	border-bottom-color: #00ff0c;
 }
+div.status div.yellow
+{
+	border-bottom-color: #ffd400;
+}
 div.status div.red
 {
 	border-bottom-color: #ff7816;
