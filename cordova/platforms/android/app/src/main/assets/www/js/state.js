@@ -1,4 +1,0 @@
-const STATE_DISARMED = 'R';
-const STATE_ARMED = 'A';
-const STATE_CONTINUITYTESTPASSED = 'C';
-const STATE_FIRING = 'F';
