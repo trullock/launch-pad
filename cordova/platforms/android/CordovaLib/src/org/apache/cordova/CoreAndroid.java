@@ -55,6 +55,23 @@ public class CoreAndroid extends CordovaPlugin {
         sendEventMessage(action);
     }
 
+	/**
+     * Send an event to be fired on the Javascript side.
+     *
+     * @param action The name of the event to be fired
+	 * @param action T=up, F=down
+     */
+    public void fireJavascriptButtonEvent(String action, boolean directionUp) {
+        JSONObject obj = new JSONObject();
+        try {
+			obj.put("directionUp", directionUp);
+        } catch (JSONException e) {
+            LOG.e(TAG, "Failed to create event message", e);
+        }
+
+        sendEventMessage(action, obj);
+    }
+
     /**
      * Sets the context of the Command. This can then be used to do things like
      * get file paths associated with the Activity.
@@ -321,11 +338,16 @@ public class CoreAndroid extends CordovaPlugin {
 
     private void sendEventMessage(String action) {
         JSONObject obj = new JSONObject();
-        try {
+        sendEventMessage(action, obj);
+    }
+
+	private void sendEventMessage(String action, JSONObject obj) {
+		try {
             obj.put("action", action);
         } catch (JSONException e) {
             LOG.e(TAG, "Failed to create event message", e);
         }
+
         PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
 
         if (messageChannel == null) {

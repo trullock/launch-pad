@@ -71,6 +71,7 @@ public class CordovaWebViewImpl implements CordovaWebView {
     private WebChromeClient.CustomViewCallback mCustomViewCallback;
 
     private Set<Integer> boundKeyCodes = new HashSet<Integer>();
+	private Set<Integer> pressedKeyCodes = new HashSet<Integer>();
 
     public static CordovaWebViewEngine createEngine(Context context, CordovaPreferences preferences) {
         String className = preferences.getString("webview", SystemWebViewEngine.class.getCanonicalName());
@@ -340,6 +341,18 @@ public class CordovaWebViewImpl implements CordovaWebView {
         return engine.getView().getContext();
     }
 
+	private void sendJavascriptButtonEvent(String event, boolean directionUp) {
+        if (appPlugin == null) {
+            appPlugin = (CoreAndroid)pluginManager.getPlugin(CoreAndroid.PLUGIN_NAME);
+        }
+
+        if (appPlugin == null) {
+            LOG.w(TAG, "Unable to fire event without existing plugin");
+            return;
+        }
+        appPlugin.fireJavascriptButtonEvent(event, directionUp);
+    }
+
     private void sendJavascriptEvent(String event) {
         if (appPlugin == null) {
             appPlugin = (CoreAndroid)pluginManager.getPlugin(CoreAndroid.PLUGIN_NAME);
@@ -561,11 +574,37 @@ public class CordovaWebViewImpl implements CordovaWebView {
                 if (isBackButton && mCustomView != null) {
                     return true;
                 } else if (boundKeyCodes.contains(keyCode)) {
-                    return true;
+					if(!pressedKeyCodes.contains(keyCode)) {
+						pressedKeyCodes.add(keyCode);
+						String eventName = null;
+						switch (keyCode) {
+							case KeyEvent.KEYCODE_VOLUME_DOWN:
+								eventName = "volumedownbutton";
+								break;
+							case KeyEvent.KEYCODE_VOLUME_UP:
+								eventName = "volumeupbutton";
+								break;
+							case KeyEvent.KEYCODE_SEARCH:
+								eventName = "searchbutton";
+								break;
+							case KeyEvent.KEYCODE_MENU:
+								eventName = "menubutton";
+								break;
+							case KeyEvent.KEYCODE_BACK:
+								eventName = "backbutton";
+								break;
+						}
+						if (eventName != null)
+							sendJavascriptButtonEvent(eventName, false);
+					}
+					return true;
                 } else if (isBackButton) {
                     return engine.canGoBack();
                 }
             } else if (event.getAction() == KeyEvent.ACTION_UP) {
+				if(pressedKeyCodes.contains(keyCode))
+					pressedKeyCodes.remove(keyCode);
+
                 if (isBackButton && mCustomView != null) {
                     hideCustomView();
                     return true;
@@ -589,7 +628,7 @@ public class CordovaWebViewImpl implements CordovaWebView {
                             break;
                     }
                     if (eventName != null) {
-                        sendJavascriptEvent(eventName);
+                        sendJavascriptButtonEvent(eventName, true);
                         return true;
                     }
                 } else if (isBackButton) {

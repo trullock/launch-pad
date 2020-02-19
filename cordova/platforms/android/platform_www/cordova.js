@@ -1515,8 +1515,11 @@ function onMessageFromNative(msg) {
         case 'pause':
         // Volume events
         case 'volumedownbutton':
-        case 'volumeupbutton':
-            cordova.fireDocumentEvent(action);
+		case 'volumeupbutton':
+			var arg = {
+				direction: msg.directionUp ? 'up' : 'down'
+			};
+            cordova.fireDocumentEvent(action, arg);
             break;
         case 'resume':
             if(arguments.length > 1 && msg.pendingResult) {

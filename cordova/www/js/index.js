@@ -1,7 +1,13 @@
 var app = {
     initialize: function() {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+		document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+		
+		document.addEventListener('volumeupbutton', this.volumebutton.bind(this), false);
     },
+
+	volumebutton: function(e) {
+		console.log("volumebutton: " + e.direction);
+	},
 
     onDeviceReady: function() {
 		var me = this;
