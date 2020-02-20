@@ -29,6 +29,8 @@ var app = {
     onDeviceReady: function() {
 		var me = this;
 		
+		network.init();
+
 		network.onTcpReceive = function (str) {
 			var event = str[0];
 			var state = str[1];
