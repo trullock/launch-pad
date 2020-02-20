@@ -55,6 +55,8 @@ class CommandPage extends Page
 		this.$commandTimeoutState = this.$el.querySelector('div.status .command-timeout');
 		this.$commandTimeoutStateMessage = this.$commandTimeoutState.querySelector('span.state');
 
+		document.addEventListener('volumeupbutton', this.volumeUpButton.bind(this), false);
+
 		window.bus.subscribe('state change', function(state){
 			me.setState(state);
 		});
@@ -65,6 +67,15 @@ class CommandPage extends Page
 			state: STATE_DISARMED,
 			event: 0
 		});
+	}
+
+	volumeUpButton(e) {
+		this.volumeUpButtonPressed = e.direction == 'down';
+
+		if(this.state !== 'PassedContinuityTest')
+			return;
+
+		this.passContinuityTest();
 	}
 
 	requestArm() {
@@ -132,8 +143,8 @@ class CommandPage extends Page
 		{
 			this.startCommandTimeout();
 		} 
-		// Disarmed
-		else if(state.event === 'D')
+		// Disarmed || Firing
+		else if(state.event === 'D' || state.state === 'F')
 		{
 			this.clearCommandTimeout();
 		}
@@ -154,13 +165,13 @@ class CommandPage extends Page
 	{
 		if(engaged)
 		{
-			this.$interlockStateMessage.innerText = "Engaged ✔️"
+			this.$interlockStateMessage.innerHTML = "Engaged &#x2714;"
 			this.$interlockState.classList.remove('red');
 			this.$interlockState.classList.add('green');
 		}
 		else
 		{
-			this.$interlockStateMessage.innerText = "Disengaged ❌"
+			this.$interlockStateMessage.innerHTML = "Disengaged &#x274C;"
 			this.$interlockState.classList.add('red');
 			this.$interlockState.classList.remove('green');
 		}
@@ -168,12 +179,12 @@ class CommandPage extends Page
 
 	setFiringMechanism(engaged) {
 		if (engaged) {
-			this.$firingMechanismMessage.innerText = "Engaged 🔥"
+			this.$firingMechanismMessage.innerHTML = "Engaged &#x1F525;"
 			this.$firingMechanism.classList.add('red');
 			this.$firingMechanism.classList.remove('green');
 		}
 		else {
-			this.$firingMechanismMessage.innerText = "Disengaged ❌"
+			this.$firingMechanismMessage.innerHTML = "Disengaged &#x274C;"
 			this.$firingMechanism.classList.remove('red');
 			this.$firingMechanism.classList.add('green');
 		}
@@ -189,14 +200,17 @@ class CommandPage extends Page
 
 	disarm()
 	{
-		this.$btnArm.disabled = false;
+		this.state = 'Disarmed';
 
+		this.$btnArm.disabled = false;
 		this.$padStatus.classList.remove('red', 'green', 'yellow');
 		this.$padStatusMessage.innerText = "Disarmed";
 	}
 
 	arm()
 	{
+		this.state = 'Armed';
+
 		this.$btnTestContinuity.disabled = false;
 		this.$btnDisarm.disabled = false;
 
@@ -207,7 +221,9 @@ class CommandPage extends Page
 
 	passContinuityTest()
 	{
-		this.$btnFire.disabled = false;
+		this.state = 'PassedContinuityTest';
+
+		this.$btnFire.disabled = !this.volumeUpButtonPressed;
 		this.$btnDisarm.disabled = false;
 
 		this.$padStatus.classList.remove('red', 'green', 'yellow');
@@ -217,6 +233,8 @@ class CommandPage extends Page
 
 	fire()
 	{
+		this.state = 'Firing';
+
 		this.$btnDisarm.disabled = false;
 
 		this.$padStatus.classList.remove('red', 'green', 'yellow');

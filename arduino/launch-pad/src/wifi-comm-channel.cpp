@@ -181,8 +181,11 @@ char WifiCommChannel::readCommand()
 		tcpClient.readBytes(buffer, availableBytes);
 		command = parseCommand(buffer);
 
-		Log.print("WifiCommChannel::read: Command received: ");
-		Log.println(command == '\0' ? '0' : command);
+		if(command != '\0')
+		{
+			Log.print("WifiCommChannel::read: Command received: ");
+			Log.println(command == '\0' ? '0' : command);
+		}
 	}
 
 	return command;

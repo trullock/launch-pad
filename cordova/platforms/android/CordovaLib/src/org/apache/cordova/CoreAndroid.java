@@ -146,7 +146,7 @@ public class CoreAndroid extends CordovaPlugin {
             callbackContext.sendPluginResult(new PluginResult(status, result));
             return true;
         } catch (JSONException e) {
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION));
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, e.getMessage() + "\n" + LOG.getStackTraceString(e)));
             return false;
         }
     }

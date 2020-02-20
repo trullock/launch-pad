@@ -140,7 +140,7 @@ public class PluginManager {
                 callbackContext.sendPluginResult(cr);
             }
         } catch (JSONException e) {
-            PluginResult cr = new PluginResult(PluginResult.Status.JSON_EXCEPTION);
+            PluginResult cr = new PluginResult(PluginResult.Status.JSON_EXCEPTION, e.getMessage() + "\n" + LOG.getStackTraceString(e));
             callbackContext.sendPluginResult(cr);
         } catch (Exception e) {
             LOG.e(TAG, "Uncaught exception from plugin", e);

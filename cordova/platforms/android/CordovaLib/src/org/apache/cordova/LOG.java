@@ -71,6 +71,11 @@ public class LOG {
         return (logLevel >= LOGLEVEL);
     }
 
+	public static String getStackTraceString(Throwable t) {
+		return Log.getStackTraceString(t);
+	}
+
+
     /**
      * Verbose log message.
      *
