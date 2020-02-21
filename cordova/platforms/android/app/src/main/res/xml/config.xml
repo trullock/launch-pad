@@ -50,4 +50,7 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="SplashShowOnlyFirstTime" value="true" />
+    <feature name="Serial">
+        <param name="android-package" value="fr.drangies.cordova.serial.Serial" />
+    </feature>
 </widget>

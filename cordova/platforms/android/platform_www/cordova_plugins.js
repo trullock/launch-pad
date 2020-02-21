@@ -54,6 +54,14 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "clobbers": [
         "Fingerprint"
       ]
+    },
+    {
+      "id": "cordova-plugin-serial.Serial",
+      "file": "plugins/cordova-plugin-serial/www/serial.js",
+      "pluginId": "cordova-plugin-serial",
+      "clobbers": [
+        "window.serial"
+      ]
     }
   ];
   module.exports.metadata = {
@@ -62,6 +70,7 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-chrome-apps-sockets-udp": "1.3.0",
     "cordova-plugin-chrome-apps-sockets-tcp": "1.3.7",
     "cordova-plugin-splashscreen": "5.0.3",
-    "cordova-plugin-fingerprint-aio": "3.0.1"
+    "cordova-plugin-fingerprint-aio": "3.0.1",
+    "cordova-plugin-serial": "0.0.3"
   };
 });
