@@ -41,8 +41,14 @@ var network = (function(){
 		// Heartbeat response
 		obj.tcpSend("Hello");
 
-		if(obj.onTcpReceive)
-			obj.onTcpReceive(data);
+		if(data.length % 4 != 0)
+		{
+			obj.onTcpReceiveError && obj.onTcpReceiveError(data);
+			return;
+		}
+
+		for(var i = 0; i <= data.length - 4; i = i + 4)
+			obj.onTcpReceive && obj.onTcpReceive(data.substr(i, 4));
 	}
 
 	function tcpReceiveError(info) {
