@@ -1,6 +1,6 @@
 function startNetworking() {
 	network.listenForUdpBeacon().then(remoteAddress => {
-		console.log(remoteAddress);
+		bus.publish('console log', 'Pad found: ' + remoteAddress);
 		return network.tcpConnect(remoteAddress);
 	}).then(function (result) {
 		return network.tcpSend('Hello');
@@ -27,8 +27,6 @@ var app = {
     },
 
     onDeviceReady: function() {
-		var me = this;
-		
 		network.init();
 
 		network.onTcpReceive = function (str) {
@@ -50,6 +48,22 @@ var app = {
 		};
 
 		startNetworking();
+		
+		serial.requestPermission(function(){
+			serial.open({
+				baudRate: 115200
+			}, function (){
+				serial.write('1');
+			});
+
+			serial.registerReadCallback(
+				function success(data) {
+					bus.publish('console log', String.fromCharCode.apply(null, new Uint8Array(data)));
+				},
+				function error() {
+					new Error("Failed to register read callback");
+				});
+		});
     }
 };
 

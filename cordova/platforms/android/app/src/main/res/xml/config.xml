@@ -11,6 +11,9 @@
     <feature name="Fingerprint">
         <param name="android-package" value="de.niklasmerz.cordova.biometric.Fingerprint" />
     </feature>
+    <feature name="Serial">
+        <param name="android-package" value="fr.drangies.cordova.serial.Serial" />
+    </feature>
     <feature name="ChromeSocketsUdp">
         <param name="android-package" value="org.chromium.ChromeSocketsUdp" />
     </feature>
@@ -50,7 +53,4 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="SplashShowOnlyFirstTime" value="true" />
-    <feature name="Serial">
-        <param name="android-package" value="fr.drangies.cordova.serial.Serial" />
-    </feature>
 </widget>

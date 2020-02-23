@@ -1,5 +1,12 @@
 * {
-    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+	-webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+	padding: 0;
+	margin: 0
+}
+
+*:focus
+{
+	outline: none;
 }
 
 body
@@ -25,7 +32,9 @@ body
 
 .page
 {
-	padding: 20px;
+	padding: 90px 20px 20px 20px;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .hidden
@@ -38,6 +47,13 @@ body
 	width: 100%;
 	height: 100%;
 	overflow: scroll;
+
+	box-sizing: border-box;
+	padding: 5px;
+
+	font-family: 'Courier New', Courier, monospace;
+	color: #00ff0c;
+	background-color: #444;
 }
 
 button
@@ -98,10 +114,42 @@ div.status div.red
 	border-bottom-color: #ff7816;
 }
 
-img.logo
+header
 {
-	width: 50px;
+	width: 100%;
+	overflow: auto;
+	box-sizing: border-box;
+	padding: 10px;
+	height: 75px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+
+header button
+{
+	float: right;
+	background-repeat: no-repeat;
 	height: 50px;
-	display: block;
-	margin-bottom: 20px;
+	width: 50px;
+	border: 0;
+	background-size: 48px 48px;
+	background-color: #fff;
+}
+
+button#btnHome
+{
+	background-image: url(../img/rocket.png);
+	float: left;
+}
+button#btnSettings
+{
+	background-image: url(../img/gear.png);
+}
+
+button#btnConsole
+{
+	margin-left: 10px;
+	background-image: url(../img/terminal.png);
 }

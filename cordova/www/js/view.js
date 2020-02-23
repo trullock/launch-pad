@@ -256,35 +256,43 @@ class ConsolePage extends Page
 	}
 
 	write(message) {
-		this.$console.innerText += (new Date()).toISOString() + ": " + data + "\r\n";
+		console.log(message);
+
+		var now = new Date();
+		this.$console.innerText += now.toLocaleTimeString() + ": " + message + "\r\n";
 		this.$console.scrollTop = this.$console.scrollHeight;
 	}
 }
 
-var view = (function() {
+class SettingsPage extends Page {
+	constructor() {
+		super(document.querySelector('#pgSettings'));
+	}
+}
+(function() {
 
 	let pgCommand = new CommandPage();
 	let pgConsole = new ConsolePage();
+	let pgSettings = new SettingsPage();
 
 	function hideAllPages(){
 		pgCommand.hide();
 		pgConsole.hide();
+		pgSettings.hide();
 	}
 
-	return {
+	document.querySelector('#btnHome').addEventListener('click', function(){
+		hideAllPages();
+		pgCommand.show();
+	});
 
-		pages: {
+	document.querySelector('#btnConsole').addEventListener('click', function () {
+		hideAllPages();
+		pgConsole.show();
+	});
 
-			showCommand: function(){
-				hideAllPages();
-				pgCommand.show();
-			},
-
-			showConsole: function(){
-				hideAllPages();
-				pgConsole.show();
-			}
-		}
-	};
-
+	document.querySelector('#btnSettings').addEventListener('click', function () {
+		hideAllPages();
+		pgSettings.show();
+	});
 })();

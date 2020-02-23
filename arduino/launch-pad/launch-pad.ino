@@ -24,6 +24,4 @@ void loop()
 {
 	unsigned long m = millis();
 	controller->loop(m);
-
-	//Serial.println("loopy");
 }

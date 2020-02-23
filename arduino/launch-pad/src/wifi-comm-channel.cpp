@@ -152,13 +152,13 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 	}
 
 	// check for application layer TCP timeout
-	//if (tcpClientConnected && lastTcpEventMillis + Wifi_Tcp_Connection_TimeoutMillis <= millis)
-	//{
-	//	tcpClient.stop();
-	//	tcpClientConnected = false;
-	//
-	//	Log.println("WifiCommChannel::checkTcpState: Application layer keepalive timeout");
-	//}
+	if (tcpClientConnected && lastTcpEventMillis + Wifi_Tcp_Connection_TimeoutMillis <= millis)
+	{
+		tcpClient.stop();
+		tcpClientConnected = false;
+	
+		Log.println("WifiCommChannel::checkTcpState: Application layer keepalive timeout");
+	}
 
 	return tcpClientConnected;
 }
@@ -184,7 +184,7 @@ char WifiCommChannel::readCommand()
 		if(command != '\0')
 		{
 			Log.print("WifiCommChannel::read: Command received: ");
-			Log.println(command == '\0' ? '0' : command);
+			Log.println(command);
 		}
 	}
 
