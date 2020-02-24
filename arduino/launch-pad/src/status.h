@@ -5,6 +5,7 @@ struct Status
 {
 	bool interlockEngaged;
 	bool firingMechanismEngaged;
+	float batteryVoltage;
 	char state;
 };
 

@@ -181,7 +181,7 @@ char WifiCommChannel::readCommand()
 		tcpClient.readBytes(buffer, availableBytes);
 		command = parseCommand(buffer);
 
-		if(command != '\0')
+		if (command != Command_Null)
 		{
 			Log.print("WifiCommChannel::read: Command received: ");
 			Log.println(command);
@@ -205,15 +205,25 @@ void WifiCommChannel::writeStatus(char response, Status state)
 		Log.print(", InterlockEngaged: ");
 		Log.print(state.interlockEngaged);
 		Log.print(", FiringMechanismEngaged: ");
-		Log.println(state.firingMechanismEngaged);
+		Log.print(state.firingMechanismEngaged);
+		Log.print(", BatteryVoltage: ");
+		Log.println(state.batteryVoltage);
 	}
 
-	char buffer[5];
+
+	char buffer[8];
 	buffer[0] = response;
 	buffer[1] = state.state;
 	buffer[2] = state.interlockEngaged ? '1' : '0';
 	buffer[3] = state.firingMechanismEngaged ? '1' : '0';
-	buffer[4] = '\0';
+
+	int voltage = state.batteryVoltage * 100;
+
+	buffer[4] = 48 + ((voltage / 100) % 100);
+	buffer[5] = 48 + ((voltage / 10) % 10);
+	buffer[6] = 48 + (voltage % 10);
+
+	buffer[7] = '\0';
 
 	tcpClient.write(buffer);
 	tcpClient.flush();

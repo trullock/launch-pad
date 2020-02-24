@@ -41,7 +41,9 @@ void UsbCommChannel::writeStatus(char response, Status state)
 	Serial.print(response);
 	Serial.print(state.state);
 	Serial.print(state.interlockEngaged ? '0' : '1');
-	Serial.println(state.firingMechanismEngaged ? '0' : '1');
+	Serial.print(state.firingMechanismEngaged ? '0' : '1');
+	int voltage = state.batteryVoltage * 10;
+	Serial.println(voltage);
 }
 
 bool UsbCommChannel::isConnected()

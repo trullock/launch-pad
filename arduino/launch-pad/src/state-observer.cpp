@@ -9,6 +9,7 @@ StateObserver::StateObserver()
 {
 	pinMode(InterlockEngagedReadPin, INPUT);
 	pinMode(FiringMechanismEngagedReadPin, INPUT);
+	pinMode(A0, INPUT);
 }
 
 bool StateObserver::interlockEngaged()
@@ -21,4 +22,11 @@ bool StateObserver::firingMechanismEngaged()
 {
 	int result = digitalRead(FiringMechanismEngagedReadPin);
 	return result != 0;
+}
+
+float StateObserver::batteryVoltage()
+{
+	long sensorValue = analogRead(A0);
+	float voltage = sensorValue * (3.2 / 1023.0);
+	return voltage;
 }

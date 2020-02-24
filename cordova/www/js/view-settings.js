@@ -2,9 +2,8 @@ class SettingsPage extends Page {
 	constructor() {
 		super(document.querySelector('#pgSettings'));
 
-		function lol(){
-
-			
+		this.$btnConnect = this.$el.querySelector('#btnSerialConnect');
+		this.$btnConnect.addEventListener('click', function(){
 			serial.requestPermission(function () {
 				serial.open({
 					baudRate: 115200
@@ -14,12 +13,13 @@ class SettingsPage extends Page {
 
 				serial.registerReadCallback(
 					function success(data) {
-						bus.publish('console log', String.fromCharCode.apply(null, new Uint8Array(data)));
+						bus.publish('console log', "Serial: " + String.fromCharCode.apply(null, new Uint8Array(data)));
 					},
 					function error() {
-						new Error("Failed to register read callback");
-					});
+						bus.publish('console error', new Error("Failed to register Serial read callback"));
+					}
+				);
 			});
-		}
+		});
 	}
 }

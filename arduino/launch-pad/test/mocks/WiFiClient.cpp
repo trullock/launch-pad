@@ -23,7 +23,7 @@ void WiFiClient::keepAlive(int idle_sec, int interval_sec, int count)
 {
 }
 
-void WiFiClient::write(char data)
+void WiFiClient::write(char* data)
 {
 }
 

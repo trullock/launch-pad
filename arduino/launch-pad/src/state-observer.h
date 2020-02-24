@@ -10,6 +10,7 @@ public:
 	~StateObserver() {}
 	virtual bool interlockEngaged();
 	virtual bool firingMechanismEngaged();
+	virtual float batteryVoltage();
 };
 
 #endif

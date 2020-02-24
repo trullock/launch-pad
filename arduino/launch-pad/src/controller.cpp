@@ -1,6 +1,8 @@
 #include "controller.h"
 #include "status.h"
 
+#define RelayActuationMillis 50
+
 Controller::Controller(ICommChannel* c, StateMachine* s, IContinuityTester* ct, IFiringMechanism* fm, IStateObserver* so)
 {
 	comms = c;
@@ -76,6 +78,7 @@ void Controller::reportStatus(char response, unsigned long millis)
 	Status st;
 	st.interlockEngaged = stateObserver->interlockEngaged();
 	st.firingMechanismEngaged = stateObserver->firingMechanismEngaged();
+	st.batteryVoltage = stateObserver->batteryVoltage();
 	st.state = state->getState();
 
 	comms->writeStatus(response, st);
@@ -184,6 +187,9 @@ void Controller::disarm(char reason, unsigned long millis)
 
 	if(state->disarm())
 	{
+		// give the relay time to move
+		delay(RelayActuationMillis);
+
 		Log.println("Controller::disarm: Disarm successful");
 		reportStatus(reason, millis);
 	}
@@ -243,6 +249,10 @@ void Controller::fire(unsigned long millis)
 
 	firingStartedMillis = millis;
 	firingMechanism->fire();
+
+	// give the relay time to move
+	delay(RelayActuationMillis);
+
 	Log.println("Controller::fire: Firing initiation successful");
 	reportStatus(Response_Firing, millis);
 }

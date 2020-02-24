@@ -16,6 +16,11 @@ bool TestStateObserver::firingMechanismEngaged()
 	return firing;
 }
 
+float TestStateObserver::batteryVoltage()
+{
+	return 12.8;
+}
+
 void TestStateObserver::setInterlockEngaged(bool engaged)
 {
 	interlocked = engaged;

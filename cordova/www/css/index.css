@@ -109,7 +109,7 @@ button.yellow:active
 button.green
 {
 	background: #70ff77;
-	border-color: #;
+	border-color: #00ff0c;
 }
 
 button.green:active
@@ -117,30 +117,87 @@ button.green:active
 	background: #00ff0c;
 }
 
+
+
+
+
+
 div.status div
 {
 	padding-bottom: 5px;
-	border-bottom: solid 2px #25d9f8;
+	border-bottom: solid 2px #444;
 	margin-bottom: 20px;
 }
 
-div.status div.green,
-div.status div.engaged,
-div.status div.armed
+div.status span.status
+{
+	font-weight: bold;
+}
+
+div.status svg
+{
+	display: none;
+	width: 18px;
+	vertical-align: top;
+}
+
+div.status div.interlock.disengaged,
+div.status div.firing-mechanism.disengaged,
+div.status div.voltage.ok,
+div.status div.pad-status.disarmed
 {
 	border-bottom-color: #00ff0c;
 }
-div.status div.yellow,
-div.status div.continuity-test-passed
+div.status div.interlock.disengaged svg.disengaged,
+div.status div.firing-mechanism.disengaged svg,
+div.status div.voltage.ok svg,
+div.status div.pad-status.disarmed svg.disarmed
+{
+	fill: #00ff0c;
+	display: inline-block;
+}
+
+div.status div.pad-status.armed
+{
+	border-bottom-color: #25d9f8;
+}
+div.status div.pad-status.armed svg.armed
+{
+	fill: #25d9f8;
+	display: inline-block;
+}
+
+div.status div.voltage.low,
+div.status div.pad-status.continuity-test-passed
 {
 	border-bottom-color: #ffd400;
 }
-div.status div.red,
-div.status div.disengaged,
-div.status div.firing
+div.status div.voltage.low svg,
+div.status div.pad-status.continuity-test-passed svg.continuity-test-passed
+{
+	fill: #ffd400;
+	display: inline-block;
+}
+
+div.status div.interlock.engaged,
+div.status div.firing-mechanism.engaged,
+div.status div.voltage.flat,
+div.status div.pad-status.firing
 {
 	border-bottom-color: #ff7816;
 }
+div.status div.interlock.engaged svg.engaged,
+div.status div.firing-mechanism.engaged svg,
+div.status div.voltage.flat svg,
+div.status div.pad-status.firing svg.firing
+{
+	fill: #ff7816;
+	display: inline-block;
+}
+
+
+
+
 
 menu
 {
@@ -200,48 +257,33 @@ menu button:active svg
 	fill: #000;
 }
 
-svg.engaged,
-svg.disengaged,
-svg.disarmed,
-svg.armed,
-svg.firing,
-svg.continuity-test-passed
+menu button.current
 {
-	display: none;
+	color: #25d9f8;
 }
 
-.disarmed svg.disarmed
+menu button.current svg
 {
 	fill: #25d9f8;
-	display: inline-block;
 }
 
-.armed svg.armed
+
+fieldset
 {
-	fill: #00ff0c;
-	display: inline-block;
+	border: 0;
 }
 
-.engaged svg.engaged,
-.armed svg.armed
+label
 {
-	fill: #00ff0c;
-	display: inline-block;
-}
-.continuity-test-passed svg.continuity-test-passed
-{
-	fill: #ffd400;
-	display: inline-block;
-}
-.disengaged svg.disengaged,
-.firing svg.firing
-{
-	fill: #ff7816;
-	display: inline-block;
+	display: block;
 }
 
-.status svg
+input[type=text]
 {
-	width: 18px;
-	vertical-align: top;
+	padding: 5px;
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	margin: 5px 0 10px 0;
+	font-size: 20px;
 }

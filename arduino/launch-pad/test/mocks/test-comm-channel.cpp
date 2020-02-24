@@ -40,7 +40,7 @@ void TestCommChannel::writeStatus(char response, Status state)
 {
 	writeResponse(response);
 	writeResponse(state.state);
-	writeResponse(state.interlockEnabled ? 1 : 0);
+	writeResponse(state.interlockEngaged ? 1 : 0);
 }
 
 char TestCommChannel::getWrittenChar()

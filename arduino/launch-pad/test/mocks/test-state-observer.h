@@ -10,6 +10,7 @@ public:
 	~TestStateObserver(){};
 	virtual bool interlockEngaged();
 	virtual bool firingMechanismEngaged();
+	virtual float batteryVoltage();
 	void setInterlockEngaged(bool engaged);
 	void setFiringMechanismEngaged(bool engaged);
 

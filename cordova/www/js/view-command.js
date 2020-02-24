@@ -36,6 +36,9 @@ class CommandPage extends Page
 		this.$padStatus = this.$el.querySelector('div.status .pad-status');
 		this.$padStatusMessage = this.$padStatus.querySelector('span.state');
 
+		this.$padVoltage = this.$el.querySelector('div.status .voltage');
+		this.$padVoltageMessage = this.$padVoltage.querySelector('span.state');
+
 		this.$commandTimeoutState = this.$el.querySelector('div.status .command-timeout');
 		this.$commandTimeoutStateMessage = this.$commandTimeoutState.querySelector('span.state');
 
@@ -48,6 +51,7 @@ class CommandPage extends Page
 		this.setState({
 			interlockEngaged: false,
 			firingMechanismEngaged: false,
+			batteryVoltage: 0,
 			state: STATE_DISARMED,
 			event: 0
 		});
@@ -95,6 +99,11 @@ class CommandPage extends Page
 
 		var me = this;
 		this.commandTimeoutInterval = window.setInterval(function() {
+			if(me.commandTimeoutCounter == 0) {
+				me.clearCommandTimeout();
+				return;
+			}
+			
 			me.commandTimeoutCounter--;
 			me.setCommandTimeout();
 		}, 1000);
@@ -103,23 +112,30 @@ class CommandPage extends Page
 	}
 
 	setCommandTimeout() {
-		if (this.commandTimeoutCounter > 0)
+		if (this.commandTimeoutCounter == 0)
+		{
+			this.$commandTimeoutStateMessage.innerText = 'Elapsed';
+			this.$commandTimeoutState.classList.remove('green', 'red', 'yellow');
+			this.$commandTimeoutState.classList.add('red');
+		}
+		else if (this.commandTimeoutCounter < 10)
 		{
 			this.$commandTimeoutStateMessage.innerText = this.commandTimeoutCounter + 's';
-			this.$commandTimeoutState.classList.remove('red');
-			this.$commandTimeoutState.classList.add('green');
+			this.$commandTimeoutState.classList.remove('green', 'red', 'yellow');
+			this.$commandTimeoutState.classList.add('yellow');
 		}
 		else
 		{
-			this.$commandTimeoutStateMessage.innerText = 'Elapsed';
-			this.$commandTimeoutState.classList.remove('green');
-			this.$commandTimeoutState.classList.add('red');
+			this.$commandTimeoutStateMessage.innerText = this.commandTimeoutCounter + 's';
+			this.$commandTimeoutState.classList.remove('green', 'red', 'yellow');
+			this.$commandTimeoutState.classList.add('green');
 		}
 	}
 
 	setState(state) {
 		this.setInterlockState(state.interlockEngaged);
 		this.setFiringMechanism(state.firingMechanismEngaged);
+		this.setPadVoltage(state.batteryVoltage);
 
 		this.disableAllButtons();
 
@@ -164,15 +180,35 @@ class CommandPage extends Page
 
 	setFiringMechanism(engaged) {
 		if (engaged) {
-			this.$firingMechanismMessage.innerHTML = "Engaged"
-			this.$firingMechanism.classList.add('disengaged');
-			this.$firingMechanism.classList.remove('engaged');
+			this.$firingMechanismMessage.innerHTML = "Live"
+			this.$firingMechanism.classList.add('engaged');
+			this.$firingMechanism.classList.remove('disengaged');
 		}
 		else {
-			this.$firingMechanismMessage.innerHTML = "Disengaged"
-			this.$firingMechanism.classList.remove('disengaged');
-			this.$firingMechanism.classList.add('engaged');
+			this.$firingMechanismMessage.innerHTML = "Dead"
+			this.$firingMechanism.classList.remove('engaged');
+			this.$firingMechanism.classList.add('disengaged');
 		}
+	}
+
+	setPadVoltage(voltage) {
+		this.$padVoltageMessage.innerText = voltage + 'V';
+		this.$padVoltage.classList.remove('ok', 'low', 'flat');
+
+		if (voltage > 12) {	
+			this.$padVoltage.classList.add('ok');
+		}
+		else if(voltage > 11.8)
+		{
+			this.$padVoltage.classList.add('low');
+		} else 
+		{
+			this.$padVoltage.classList.add('flat');
+		}
+	}
+
+	setPadStatus(status) {
+		
 	}
 
 	disableAllButtons()
