@@ -32,7 +32,7 @@ body
 
 .page
 {
-	padding: 90px 20px 20px 20px;
+	padding: 20px 20px 80px 20px;
     height: 100%;
     box-sizing: border-box;
 }
@@ -52,11 +52,13 @@ body
 	padding: 5px;
 
 	font-family: 'Courier New', Courier, monospace;
+	font-size: 8pt;
+
 	color: #00ff0c;
 	background-color: #444;
 }
 
-button
+.page button
 {
 	padding: 20px 15px;
 	border: solid 1px #ccc;
@@ -77,10 +79,20 @@ button.blue
 	border-color: #25d9f8;
 }
 
+button.blue:active
+{
+	background: #25d9f8;
+}
+
 button.orange
 {
 	background: #ff9f00;
 	border-color: #ff7816;
+}
+
+button.orange:active
+{
+	background: #ff7816;
 }
 
 button.yellow
@@ -88,10 +100,21 @@ button.yellow
 	background: #ffe470;
 	border-color: #ffd400;
 }
+
+button.yellow:active
+{
+	background: #ffd400;
+}
+
 button.green
 {
 	background: #70ff77;
-	border-color: #00ff0c;
+	border-color: #;
+}
+
+button.green:active
+{
+	background: #00ff0c;
 }
 
 div.status div
@@ -101,55 +124,124 @@ div.status div
 	margin-bottom: 20px;
 }
 
-div.status div.green
+div.status div.green,
+div.status div.engaged,
+div.status div.armed
 {
 	border-bottom-color: #00ff0c;
 }
-div.status div.yellow
+div.status div.yellow,
+div.status div.continuity-test-passed
 {
 	border-bottom-color: #ffd400;
 }
-div.status div.red
+div.status div.red,
+div.status div.disengaged,
+div.status div.firing
 {
 	border-bottom-color: #ff7816;
 }
 
-header
+menu
 {
-	width: 100%;
-	overflow: auto;
-	box-sizing: border-box;
-	padding: 10px;
-	height: 75px;
-	position: absolute;
-	top: 0;
-	left: 0;
+    width: 100%;
+    overflow: auto;
+    height: 58px;
+    padding-top: 5px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
 }
 
-
-header button
+menu div
 {
-	float: right;
+	float: left;
+	width: 25%;
+	text-align: center;
+}
+
+menu button
+{
+	display: inline-block;
 	background-repeat: no-repeat;
 	height: 50px;
 	width: 50px;
 	border: 0;
 	background-size: 48px 48px;
 	background-color: #fff;
+	color: #666;
 }
 
-button#btnHome
+menu button svg
 {
-	background-image: url(../img/rocket.png);
-	float: left;
-}
-button#btnSettings
-{
-	background-image: url(../img/gear.png);
+	width: 32px;
+	height: 32px;
+	fill: #666;
 }
 
-button#btnConsole
+menu button[disabled]
 {
-	margin-left: 10px;
-	background-image: url(../img/terminal.png);
+	background-color: #fff !important;
+	color: #ccc;
+}
+
+menu button[disabled] svg
+{
+	fill: #ccc;
+}
+
+menu button:active
+{
+	color: #000;
+}
+
+menu button:active svg
+{
+	fill: #000;
+}
+
+svg.engaged,
+svg.disengaged,
+svg.disarmed,
+svg.armed,
+svg.firing,
+svg.continuity-test-passed
+{
+	display: none;
+}
+
+.disarmed svg.disarmed
+{
+	fill: #25d9f8;
+	display: inline-block;
+}
+
+.armed svg.armed
+{
+	fill: #00ff0c;
+	display: inline-block;
+}
+
+.engaged svg.engaged,
+.armed svg.armed
+{
+	fill: #00ff0c;
+	display: inline-block;
+}
+.continuity-test-passed svg.continuity-test-passed
+{
+	fill: #ffd400;
+	display: inline-block;
+}
+.disengaged svg.disengaged,
+.firing svg.firing
+{
+	fill: #ff7816;
+	display: inline-block;
+}
+
+.status svg
+{
+	width: 18px;
+	vertical-align: top;
 }

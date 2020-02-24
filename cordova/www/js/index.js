@@ -1,11 +1,14 @@
 function startNetworking() {
 	network.listenForUdpBeacon().then(remoteAddress => {
 		bus.publish('console log', 'Pad found: ' + remoteAddress);
+		bus.publish('pad located', remoteAddress);
 		return network.tcpConnect(remoteAddress);
 	}).then(function (result) {
+		bus.publish('console log', 'Connected to pad');
+		bus.publish('pad connected');
 		return network.tcpSend('Hello');
 	}).then(function () {
-		navigator.splashscreen.hide();
+		
 	}).catch(function(e){
 		console.error(e);
 	});
@@ -34,7 +37,23 @@ var app = {
 			var state = str[1];
 			var interlockEngaged = str[2] == '1';
 			var firingMechanismEngaged = str[3] == '1';
-			window.bus.publish('state change', {
+
+			switch(event){
+				case 'A':
+					bus.publish('console log', 'Pad Armed');
+					break;
+				case 'C':
+					bus.publish('console log', 'Pad Passed-Continuity-Test');
+					break;
+				case 'D':
+					bus.publish('console log', 'Pad Disarmed');
+					break;
+				case 'F':
+					bus.publish('console log', 'Pad Firing');
+					break;
+			}
+
+			window.bus.publish('pad state change', {
 				state: state,
 				interlockEngaged: interlockEngaged,
 				firingMechanismEngaged: firingMechanismEngaged,
@@ -42,28 +61,16 @@ var app = {
 			});
 		};
 
-		network.onTcpReceiveError = function() {
-			navigator.splashscreen.show();
+		network.onTcpReceiveError = function(e) {
+			bus.publish('pad disconnected');
 			startNetworking();
 		};
 
-		startNetworking();
-		
-		serial.requestPermission(function(){
-			serial.open({
-				baudRate: 115200
-			}, function (){
-				serial.write('1');
-			});
+		bus.publish('pad disconnected');
 
-			serial.registerReadCallback(
-				function success(data) {
-					bus.publish('console log', String.fromCharCode.apply(null, new Uint8Array(data)));
-				},
-				function error() {
-					new Error("Failed to register read callback");
-				});
-		});
+		startNetworking();
+
+		navigator.splashscreen.hide();
     }
 };
 
