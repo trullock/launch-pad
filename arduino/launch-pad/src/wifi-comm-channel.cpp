@@ -79,6 +79,7 @@ void WifiCommChannel::connect(unsigned long millis)
 {
 	state = Wifi_State_Connecting;
 	WiFi.mode(WIFI_STA);
+	WiFi.hostname("LaunchPad");
 	WiFi.begin(credentials->ssid, credentials->password);
 	lastEventMillis = millis;
 }
