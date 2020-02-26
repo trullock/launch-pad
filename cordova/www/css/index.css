@@ -141,17 +141,23 @@ div.status svg
 	vertical-align: top;
 }
 
+
+
 div.status div.interlock.disengaged,
 div.status div.firing-mechanism.disengaged,
 div.status div.voltage.ok,
-div.status div.pad-status.disarmed
+div.status div.pad-status.disarmed,
+div.status div.location.found,
+div.status div.conn-status.connected
 {
 	border-bottom-color: #00ff0c;
 }
 div.status div.interlock.disengaged svg.disengaged,
 div.status div.firing-mechanism.disengaged svg,
 div.status div.voltage.ok svg,
-div.status div.pad-status.disarmed svg.disarmed
+div.status div.pad-status.disarmed svg.disarmed,
+div.status div.location.found svg,
+div.status div.conn-status.connected svg.connected
 {
 	fill: #00ff0c;
 	display: inline-block;
@@ -182,14 +188,18 @@ div.status div.pad-status.continuity-test-passed svg.continuity-test-passed
 div.status div.interlock.engaged,
 div.status div.firing-mechanism.engaged,
 div.status div.voltage.flat,
-div.status div.pad-status.firing
+div.status div.pad-status.firing,
+div.status div.location.unknown,
+div.status div.conn-status.disconnected
 {
 	border-bottom-color: #ff7816;
 }
 div.status div.interlock.engaged svg.engaged,
 div.status div.firing-mechanism.engaged svg,
 div.status div.voltage.flat svg,
-div.status div.pad-status.firing svg.firing
+div.status div.pad-status.firing svg.firing,
+div.status div.location.unknown svg,
+div.status div.conn-status.disconnected svg.disconnected
 {
 	fill: #ff7816;
 	display: inline-block;
@@ -286,4 +296,33 @@ input[type=text]
 	box-sizing: border-box;
 	margin: 5px 0 10px 0;
 	font-size: 20px;
+}
+
+fieldset.toggle
+{
+	position: relative;
+}
+
+fieldset.toggle input[type=radio]
+{
+	opacity: 0;
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	pointer-events: none;
+}
+
+fieldset.toggle label
+{
+	padding: 20px 15px;
+	border: solid 1px #ccc;
+	display: inline-block;
+	margin-bottom: 5px;
+	background-color: #ddd;
+}
+
+fieldset.toggle input[type=radio]:checked + label
+{
+	border-color: #00ff0c;
+	background-color: #70ff77;
 }

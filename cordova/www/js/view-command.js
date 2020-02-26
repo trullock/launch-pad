@@ -185,7 +185,7 @@ class CommandPage extends Page
 			this.$firingMechanism.classList.remove('disengaged');
 		}
 		else {
-			this.$firingMechanismMessage.innerHTML = "Dead"
+			this.$firingMechanismMessage.innerHTML = "Safe"
 			this.$firingMechanism.classList.remove('engaged');
 			this.$firingMechanism.classList.add('disengaged');
 		}

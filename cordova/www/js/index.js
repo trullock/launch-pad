@@ -69,6 +69,7 @@ var app = {
 		};
 
 		bus.publish('pad disconnected');
+		bus.publish('connection-mode changed', 'auto');
 
 		startNetworking();
 

@@ -78,6 +78,7 @@ void WifiCommChannel::beacon(unsigned long millis)
 void WifiCommChannel::connect(unsigned long millis)
 {
 	state = Wifi_State_Connecting;
+	WiFi.mode(WIFI_STA);
 	WiFi.begin(credentials->ssid, credentials->password);
 	lastEventMillis = millis;
 }
