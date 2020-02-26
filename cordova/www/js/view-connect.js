@@ -18,7 +18,10 @@ class ConnectPage extends Page {
 		this.$rbTcpConnModeManual = this.$el.querySelector('#rbTcpConnModeManual');
 		this.$rbTcpConnModeManual.addEventListener('click', function () {
 			bus.publish('connection-mode changed', 'manual');
-		})
+		});
+		this.$txtTcpAddress = this.$el.querySelector('#txtTcpAddress');
+
+
 		var me = this;
 
 
@@ -28,12 +31,14 @@ class ConnectPage extends Page {
 				me.$rbTcpConnModeAuto.checked = true;
 				me.$btnTcpConnect.disabled = true;
 				me.$btnTcpDisconnect.disabled = true;
+				me.$txtTcpAddress.disabled = true;
 			}
 			else
 			{
 				me.$rbTcpConnModeManual.checked = true;
 				me.$btnTcpConnect.disabled = false;
 				me.$btnTcpDisconnect.disabled = false;
+				me.$txtTcpAddress.disabled = false;
 			}
 		});
 

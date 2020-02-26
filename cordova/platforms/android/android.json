@@ -54,6 +54,22 @@
               "xml": "<activity android:exported=\"true\" android:name=\"de.niklasmerz.cordova.biometric.BiometricActivity\" android:theme=\"@style/TransparentTheme\" />",
               "count": 1
             }
+          ],
+          "/manifest/application/activity": [
+            {
+              "xml": "<activity android:windowSoftInputMode=\"adjustPan\" />",
+              "count": 1,
+              "mode": "merge",
+              "id": "config.xml",
+              "oldAttrib": {
+                "android:configChanges": "orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode",
+                "android:label": "@string/activity_name",
+                "android:launchMode": "singleTop",
+                "android:name": "MainActivity",
+                "android:theme": "@android:style/Theme.DeviceDefault.NoActionBar",
+                "android:windowSoftInputMode": "adjustResize"
+              }
+            }
           ]
         }
       }
