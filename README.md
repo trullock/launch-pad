@@ -217,3 +217,7 @@ If it fails so that is is unexpectedly closed, both the hardware and software Fi
 If these components suffer a hardware failure, it is assumed that the worst-case occurs and 5V or 12V appear on the analog and digital pins.
 
 No single path exists for 12V being present on the Arduino's in/output pins to supply enough current to the ignitor without other additional component failures.
+
+# Credit
+
+Icons used in the Launch Remote by https://www.flaticon.com/authors/kirill-kazachek

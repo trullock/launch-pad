@@ -58,6 +58,11 @@ body
 	background-color: #444;
 }
 
+#pgConsole pre .error
+{
+	color: #ff7816;
+}
+
 .page button
 {
 	padding: 20px 15px;
@@ -148,7 +153,8 @@ div.status div.firing-mechanism.disengaged,
 div.status div.voltage.ok,
 div.status div.pad-status.disarmed,
 div.status div.location.found,
-div.status div.conn-status.connected
+div.status div.conn-status.connected,
+div.status div.command-timeout.ok
 {
 	border-bottom-color: #00ff0c;
 }
@@ -157,29 +163,34 @@ div.status div.firing-mechanism.disengaged svg,
 div.status div.voltage.ok svg,
 div.status div.pad-status.disarmed svg.disarmed,
 div.status div.location.found svg,
-div.status div.conn-status.connected svg.connected
+div.status div.conn-status.connected svg.connected,
+div.status div.command-timeout.ok svg
 {
 	fill: #00ff0c;
 	display: inline-block;
 }
 
-div.status div.pad-status.armed
+div.status div.pad-status.armed,
+div.status div.command-timeout.idle
 {
 	border-bottom-color: #25d9f8;
 }
-div.status div.pad-status.armed svg.armed
+div.status div.pad-status.armed svg.armed,
+div.status div.command-timeout.idle svg
 {
 	fill: #25d9f8;
 	display: inline-block;
 }
 
 div.status div.voltage.low,
-div.status div.pad-status.continuity-test-passed
+div.status div.pad-status.continuity-test-passed,
+div.status div.command-timeout.warning
 {
 	border-bottom-color: #ffd400;
 }
 div.status div.voltage.low svg,
-div.status div.pad-status.continuity-test-passed svg.continuity-test-passed
+div.status div.pad-status.continuity-test-passed svg.continuity-test-passed,
+div.status div.command-timeout.warning svg
 {
 	fill: #ffd400;
 	display: inline-block;
@@ -190,7 +201,8 @@ div.status div.firing-mechanism.engaged,
 div.status div.voltage.flat,
 div.status div.pad-status.firing,
 div.status div.location.unknown,
-div.status div.conn-status.disconnected
+div.status div.conn-status.disconnected,
+div.status div.command-timeout.elapsed
 {
 	border-bottom-color: #ff7816;
 }
@@ -199,7 +211,8 @@ div.status div.firing-mechanism.engaged svg,
 div.status div.voltage.flat svg,
 div.status div.pad-status.firing svg.firing,
 div.status div.location.unknown svg,
-div.status div.conn-status.disconnected svg.disconnected
+div.status div.conn-status.disconnected svg.disconnected,
+div.status div.command-timeout.elapsed svg
 {
 	fill: #ff7816;
 	display: inline-block;
@@ -301,6 +314,9 @@ input[type=text]
 fieldset.toggle
 {
 	position: relative;
+	width: 100%;
+	overflow: auto;
+	margin-bottom: 10px;
 }
 
 fieldset.toggle input[type=radio]
@@ -316,9 +332,12 @@ fieldset.toggle label
 {
 	padding: 20px 15px;
 	border: solid 1px #ccc;
-	display: inline-block;
-	margin-bottom: 5px;
+	display: block;
+	margin: 0px;
+	float: left;
 	background-color: #ddd;
+	width: 50%;
+	box-sizing: border-box;
 }
 
 fieldset.toggle input[type=radio]:checked + label

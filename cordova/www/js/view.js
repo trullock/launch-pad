@@ -67,18 +67,16 @@
 	}
 
 	bus.subscribe('pad connected', function(){
-		if(currentPage == 'connect'){
+		if(currentPage == 'connect')
 			showCommand();
-		}
 
 		btnCommand.disabled = false;
 	});
 
 	bus.subscribe('pad disconnected', function () {
-		if(currentPage == 'command'){
+		if(currentPage == 'command')
 			showConnect();
-		}
-
+		
 		btnCommand.disabled = true;
 	});
 })();

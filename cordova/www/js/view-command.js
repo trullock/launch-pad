@@ -44,7 +44,7 @@ class CommandPage extends Page
 
 		document.addEventListener('volumeupbutton', this.volumeUpButton.bind(this), false);
 
-		window.bus.subscribe('pad state change', function(state){
+		window.bus.subscribe('pad state update', function(state){
 			me.setState(state);
 		});
 
@@ -55,6 +55,8 @@ class CommandPage extends Page
 			state: STATE_DISARMED,
 			event: 0
 		});
+
+		me.setCommandTimeout();
 	}
 
 	volumeUpButton(e) {
@@ -70,7 +72,7 @@ class CommandPage extends Page
 		var me = this;
 
 		function doArm() {
-			bus.publish('console log', 'Sending Arm command');
+			bus.publish('console log', 'remote', 'Sending Arm command');
 			network.tcpSend("Arm");
 			me.disableAllButtons();
 		}
@@ -112,23 +114,26 @@ class CommandPage extends Page
 	}
 
 	setCommandTimeout() {
-		if (this.commandTimeoutCounter == 0)
+		this.$commandTimeoutState.classList.remove('idle', 'ok', 'warning', 'elapsed');
+		if(this.commandTimeoutCounter == null)
+		{
+			this.$commandTimeoutStateMessage.innerText = 'Idle';
+			this.$commandTimeoutState.classList.add('idle');
+		}
+		else if (this.commandTimeoutCounter == 0)
 		{
 			this.$commandTimeoutStateMessage.innerText = 'Elapsed';
-			this.$commandTimeoutState.classList.remove('green', 'red', 'yellow');
-			this.$commandTimeoutState.classList.add('red');
+			this.$commandTimeoutState.classList.add('elapsed');
 		}
 		else if (this.commandTimeoutCounter < 10)
 		{
 			this.$commandTimeoutStateMessage.innerText = this.commandTimeoutCounter + 's';
-			this.$commandTimeoutState.classList.remove('green', 'red', 'yellow');
-			this.$commandTimeoutState.classList.add('yellow');
+			this.$commandTimeoutState.classList.add('warning');
 		}
 		else
 		{
 			this.$commandTimeoutStateMessage.innerText = this.commandTimeoutCounter + 's';
-			this.$commandTimeoutState.classList.remove('green', 'red', 'yellow');
-			this.$commandTimeoutState.classList.add('green');
+			this.$commandTimeoutState.classList.add('ok');
 		}
 	}
 

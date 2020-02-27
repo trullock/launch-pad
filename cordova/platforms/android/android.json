@@ -67,7 +67,7 @@
                 "android:launchMode": "singleTop",
                 "android:name": "MainActivity",
                 "android:theme": "@android:style/Theme.DeviceDefault.NoActionBar",
-                "android:windowSoftInputMode": "adjustResize"
+                "android:windowSoftInputMode": "adjustPan"
               }
             }
           ]

@@ -13,10 +13,10 @@ class SettingsPage extends Page {
 
 				serial.registerReadCallback(
 					function success(data) {
-						bus.publish('console log', "Serial: " + String.fromCharCode.apply(null, new Uint8Array(data)));
+						bus.publish('console log', 'remote', "Serial: " + String.fromCharCode.apply(null, new Uint8Array(data)));
 					},
 					function error() {
-						bus.publish('console error', new Error("Failed to register Serial read callback"));
+						bus.publish('console error', 'remote', new Error("Failed to register Serial read callback"));
 					}
 				);
 			});

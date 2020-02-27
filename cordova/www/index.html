@@ -70,7 +70,6 @@
 						<span>Pad Connection:</span>
 						<span class="state">Disconnected</span>
 					</div>
-
 					<form>
 						<fieldset class="toggle">
 							<input type="radio" id="rbTcpConnModeAuto" name="rbMode">
@@ -78,16 +77,23 @@
 							<input type="radio" id="rbTcpConnModeManual" name="rbMode">
 							<label for="rbTcpConnModeManual">Manual</label>
 						</fieldset>
-						<fieldset>
-							<label for="txtTcpAddress">Pad Address:</label>
-							<input type="text" id="txtTcpAddress" placeholder="xxx.xxx.xxx.xxx" minlength="7" maxlength="15" size="15" pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
-						</fieldset>
 					</form>
-					
-					<button id="btnTcpConnect" class="green">Connect</button>
-					<button id="btnTcpDisconnect" class="orange">Disconnect</button>
-
+					<div>
+						<span>Manual Connection</span>
+						<span class="state"></span>
+					</div>
 				</div>
+				<form>
+					<fieldset>
+						<label for="txtTcpAddress">Pad Address:</label>
+						<input type="text" id="txtTcpAddress" placeholder="xxx.xxx.xxx.xxx" minlength="7" maxlength="15" size="15"
+							pattern="^((\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$">
+					</fieldset>
+				</form>
+				
+				<button id="btnTcpConnect" class="green">Connect</button>
+				<button id="btnTcpDisconnect" class="orange">Disconnect</button>
+
 			</div>
 			<div id="pgCommand" class="page">
 				<div class="status">
@@ -277,7 +283,7 @@
 							</g>
 						</svg>
 						<span>Command Timeout:</span>
-						<span class="state">0s</span>
+						<span class="state">Idle</span>
 					</div>
 				</div>
 				<button id="btnDisarm" class="green">Disarm</button>

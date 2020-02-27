@@ -9,16 +9,25 @@ class ConnectPage extends Page {
 		this.$connStateMessage = this.$connState.querySelector('span.state');
 
 		this.$btnTcpDisconnect = this.$el.querySelector('#btnTcpDisconnect');
+		this.$btnTcpDisconnect.addEventListener('click', function(){
+			bus.publish('pad disconnect');
+		});
+
 		this.$btnTcpConnect = this.$el.querySelector('#btnTcpConnect');
+		this.$btnTcpConnect.addEventListener('click', function () {
+			bus.publish('pad connect', me.$txtTcpAddress.value);
+		});
 
 		this.$rbTcpConnModeAuto = this.$el.querySelector('#rbTcpConnModeAuto');
 		this.$rbTcpConnModeAuto.addEventListener('click', function(){
 			bus.publish('connection-mode changed', 'auto');
 		})
+
 		this.$rbTcpConnModeManual = this.$el.querySelector('#rbTcpConnModeManual');
 		this.$rbTcpConnModeManual.addEventListener('click', function () {
 			bus.publish('connection-mode changed', 'manual');
 		});
+		
 		this.$txtTcpAddress = this.$el.querySelector('#txtTcpAddress');
 
 
@@ -26,18 +35,20 @@ class ConnectPage extends Page {
 
 
 		bus.subscribe('connection-mode changed', function (mode) {
+			me.connectionMode = mode;
+
 			if (mode === 'auto')
 			{
 				me.$rbTcpConnModeAuto.checked = true;
 				me.$btnTcpConnect.disabled = true;
-				me.$btnTcpDisconnect.disabled = true;
+				me.setDisconnectButtonState();
 				me.$txtTcpAddress.disabled = true;
 			}
 			else
 			{
 				me.$rbTcpConnModeManual.checked = true;
 				me.$btnTcpConnect.disabled = false;
-				me.$btnTcpDisconnect.disabled = false;
+				me.setDisconnectButtonState();
 				me.$txtTcpAddress.disabled = false;
 			}
 		});
@@ -52,16 +63,24 @@ class ConnectPage extends Page {
 			me.$connState.classList.remove('connected', 'disconnected');
 			me.$connState.classList.add('connected');
 			me.$connStateMessage.innerText = "Connected";
+
+			me.padConnected = true;
+
+			me.setDisconnectButtonState();
 		});
 
 		bus.subscribe('pad disconnected', function () {
-			me.$locationState.classList.remove('unknown', 'found');
-			me.$locationState.classList.add('unknown');
-			me.$locationStateMessage.innerText = "0.0.0.0";
-
 			me.$connState.classList.remove('connected', 'disconnected');
 			me.$connState.classList.add('disconnected');
 			me.$connStateMessage.innerText = "Disconnected";
+
+			me.padConnected = false;
+
+			me.setDisconnectButtonState();
 		});
+	}
+
+	setDisconnectButtonState() {
+		this.$btnTcpDisconnect.disabled = !this.padConnected || this.connectionMode !== 'manual';
 	}
 }

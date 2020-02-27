@@ -5,7 +5,6 @@ var network = (function(){
 	let udpListenResolver = null;
 	
 	let tcpApplicationKeepalive = null;
-	let tcpConnected = false;
 
 	function ab2str(buf) {
 		return String.fromCharCode.apply(null, new Uint8Array(buf));
@@ -69,7 +68,7 @@ var network = (function(){
 		if (info.socketId !== tcpSocketId)
 			return;
 
-		bus.publish('console error', 'TCP Error: ' + info.message, info);
+		bus.publish('console error', 'remote', 'TCP Error: ' + info.message, info);
 
 		// TODO: this may never invoke the callback
 		chrome.sockets.tcp.close(tcpSocketId, function(info){
@@ -85,7 +84,7 @@ var network = (function(){
 
 				chrome.sockets.udp.bind(udpSocketId, "0.0.0.0", 4321, function (result) {
 					if (result < 0) {
-						bus.publish('console error', 'Error binding socket', result);
+						bus.publish('console error', 'remote', 'Error binding socket', result);
 						reject(Error("Error bidning socket"));
 						return;
 					}
@@ -97,13 +96,12 @@ var network = (function(){
 	}
 
 	function beginTcpListen (host) {
-		//console.log('Beginning TCP connection to ' + host);
 		return new Promise((resolve, reject) => {
 			chrome.sockets.tcp.create({}, function (socketInfo) {
 				tcpSocketId = socketInfo.socketId;
 				chrome.sockets.tcp.connect(tcpSocketId, host, 4321, function (result) {
 					if (result < 0) {
-						bus.publish('console error', 'Error connecting', result);
+						bus.publish('console error', 'remote', 'Error connecting', result);
 						reject(Error("Error connecting"));
 						return;
 					}
@@ -120,11 +118,10 @@ var network = (function(){
 		return new Promise((resolve, reject) => {
 			var buff = str2ab(data + '\0');
 			chrome.sockets.tcp.send(tcpSocketId, buff, function (info) {
-				//debugger;
 				if (info.resultCode < 0)
 				{
+					bus.publish('console error', 'remote', 'TCP Send error: ' + info.message, info);
 					reject(info);
-					bus.publish('console error', 'TCP Send error: ' + info.message, info);
 				}
 				else
 					resolve(info);
