@@ -11,18 +11,21 @@ class CommandPage extends Page
 
 		this.$btnTestContinuity = this.$el.querySelector('button#btnTestContinuity');
 		this.$btnTestContinuity.addEventListener('click', function (e) {
+			bus.publish('console log', 'remote', 'Sending Test-Continuity command');
 			network.tcpSend("TestContinuity");
 			me.disableAllButtons();
 		});
 
 		this.$btnDisarm = this.$el.querySelector('button#btnDisarm');
 		this.$btnDisarm.addEventListener('click', function (e) {
+			bus.publish('console log', 'remote', 'Sending Disarm command');
 			network.tcpSend("Disarm");
 			me.disableAllButtons();
 		});
 
 		this.$btnFire = this.$el.querySelector('button#btnFire');
 		this.$btnFire.addEventListener('click', function (e) {
+			bus.publish('console log', 'remote', 'Sending Fire command');
 			network.tcpSend("Fire");
 			me.disableAllButtons();
 		});
@@ -47,6 +50,10 @@ class CommandPage extends Page
 		window.bus.subscribe('pad state update', function(state){
 			me.setState(state);
 		});
+
+		window.bus.subscribe('pad disconnected', function(){
+			me.clearCommandTimeout();
+		})
 
 		this.setState({
 			interlockEngaged: false,

@@ -6,6 +6,8 @@ var network = (function(){
 	
 	let tcpApplicationKeepalive = null;
 
+	let receiveBuffer = [];
+
 	function ab2str(buf) {
 		return String.fromCharCode.apply(null, new Uint8Array(buf));
 	}
@@ -36,10 +38,14 @@ var network = (function(){
 	function startTcpTimeout(){
 		window.clearTimeout(tcpApplicationKeepalive);
 		tcpApplicationKeepalive = window.setTimeout(function () {
+			bus.publish('console error', 'remote', 'TCP application keepalive timeout');
+			for(var i = receiveBuffer.length - 1; i > receiveBuffer.length - 10 && i >= 0; i--)
+				bus.publish('console error', 'remote', receiveBuffer[i]);
+
 			disconnectTcp();
 			if (obj.onTcpReceiveError)
 				obj.onTcpReceiveError(new Error("TCP Timeout"));
-		}, 1000);
+		}, 2000);
 	}
 
 	function tcpReceive(info) {
@@ -51,11 +57,14 @@ var network = (function(){
 		let data = String.fromCharCode.apply(null, new Uint8Array(info.data));
 		//console.log("TCP Received: " + data);
 
+		receiveBuffer.push((new Date()).toISOString().substr(11, 12) + ': ' + data);
+
 		// Heartbeat response
 		obj.tcpSend("Hello");
 
 		if(data.length % 7 != 0)
 		{
+			bus.publish('console error', 'remote', 'Unexpected data length: ' + data.length + ', `' + data + '`');
 			obj.onTcpReceiveError && obj.onTcpReceiveError(data);
 			return;
 		}
@@ -68,7 +77,7 @@ var network = (function(){
 		if (info.socketId !== tcpSocketId)
 			return;
 
-		bus.publish('console error', 'remote', 'TCP Error: ' + info.message, info);
+		bus.publish('console error', 'remote', 'TCP error: ' + info.message, info);
 
 		// TODO: this may never invoke the callback
 		chrome.sockets.tcp.close(tcpSocketId, function(info){

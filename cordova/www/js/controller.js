@@ -65,7 +65,10 @@ var controller = (function(){
 				bus.publish('pad disconnected');
 
 				if(me.connectionMode === 'auto')
+				{
+					bus.publish('console log', 'remote', 'Automatically attempting reconnect');
 					me.autoConnect();
+				}
 			};
 
 			// Connect
@@ -96,6 +99,7 @@ var controller = (function(){
 		}
 
 		, start: function(){
+			bus.publish('pad dislocated');
 			bus.publish('pad disconnected');
 			bus.publish('connection-mode changed', 'auto');
 		}

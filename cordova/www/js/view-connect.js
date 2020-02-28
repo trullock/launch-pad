@@ -10,11 +10,13 @@ class ConnectPage extends Page {
 
 		this.$btnTcpDisconnect = this.$el.querySelector('#btnTcpDisconnect');
 		this.$btnTcpDisconnect.addEventListener('click', function(){
+			bus.publish('console log', 'remote', 'Manually disconnected');
 			bus.publish('pad disconnect');
 		});
 
 		this.$btnTcpConnect = this.$el.querySelector('#btnTcpConnect');
 		this.$btnTcpConnect.addEventListener('click', function () {
+			bus.publish('console log', 'remote', 'Attempting manual connect');
 			bus.publish('pad connect', me.$txtTcpAddress.value);
 		});
 
@@ -51,6 +53,12 @@ class ConnectPage extends Page {
 				me.setDisconnectButtonState();
 				me.$txtTcpAddress.disabled = false;
 			}
+		});
+
+		bus.subscribe('pad dislocated', function (remoteAddress) {
+			me.$locationState.classList.remove('unknown', 'found');
+			me.$locationState.classList.add('unknown');
+			me.$locationStateMessage.innerText = '0.0.0.0';
 		});
 
 		bus.subscribe('pad located', function (remoteAddress){

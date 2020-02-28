@@ -49,13 +49,18 @@ body
 	overflow: scroll;
 
 	box-sizing: border-box;
-	padding: 5px;
+	padding: 5px 0;
 
 	font-family: 'Courier New', Courier, monospace;
 	font-size: 8pt;
 
-	color: #00ff0c;
-	background-color: #444;
+	border-top: solid 1px #ddd;
+	border-bottom: solid 1px #ddd;
+}
+
+#pgConsole pre .message
+{
+	color: #444;
 }
 
 #pgConsole pre .error
@@ -114,7 +119,7 @@ button.yellow:active
 button.green
 {
 	background: #70ff77;
-	border-color: #00ff0c;
+	border-color: #00e40b;
 }
 
 button.green:active
@@ -305,10 +310,16 @@ input[type=text]
 {
 	padding: 5px;
 	display: block;
+	border: solid 1px #e2e2e7 !important;
 	width: 100%;
 	box-sizing: border-box;
 	margin: 5px 0 10px 0;
 	font-size: 20px;
+}
+input:disabled
+{
+	background: #ececf1 !important;
+	border: solid 1px #e2e2e7 !important;
 }
 
 fieldset.toggle
@@ -316,7 +327,7 @@ fieldset.toggle
 	position: relative;
 	width: 100%;
 	overflow: auto;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 
 fieldset.toggle input[type=radio]
@@ -330,7 +341,7 @@ fieldset.toggle input[type=radio]
 
 fieldset.toggle label
 {
-	padding: 20px 15px;
+	padding: 10px 15px;
 	border: solid 1px #ccc;
 	display: block;
 	margin: 0px;
@@ -342,6 +353,6 @@ fieldset.toggle label
 
 fieldset.toggle input[type=radio]:checked + label
 {
-	border-color: #00ff0c;
+	border-color: #00e40b;
 	background-color: #70ff77;
 }
