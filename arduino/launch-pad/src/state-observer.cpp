@@ -7,7 +7,7 @@
 
 StateObserver::StateObserver()
 {
-	pinMode(InterlockEngagedReadPin, INPUT);
+	pinMode(InterlockEngagedReadPin, INPUT_PULLUP);
 	pinMode(FiringMechanismEngagedReadPin, INPUT);
 	pinMode(A0, INPUT);
 }
@@ -15,7 +15,7 @@ StateObserver::StateObserver()
 bool StateObserver::interlockEngaged()
 {
 	int result = digitalRead(InterlockEngagedReadPin);
-	return result != 0;
+	return result == 0; // pullup mode makes this inverted
 }
 
 bool StateObserver::firingMechanismEngaged()
