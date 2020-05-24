@@ -3,13 +3,14 @@
 
 #define RelayActuationMillis 50
 
-Controller::Controller(ICommChannel* c, StateMachine* s, IContinuityTester* ct, IFiringMechanism* fm, IStateObserver* so)
+Controller::Controller(ICommChannel* c, StateMachine* s, IContinuityTester* ct, IFiringMechanism* fm, IStateObserver* so, ISounder* sd)
 {
 	comms = c;
 	state = s;
 	continuityTester = ct;
 	firingMechanism = fm;
 	stateObserver = so;
+	sounder = sd;
 
 	lastCommandMillis = 0;
 	firingStartedMillis = 0;
@@ -169,6 +170,7 @@ void Controller::arm(unsigned long millis)
 
 	if(state->arm())
 	{
+		sounder->armed();
 		Log.println("Controller::arm: Arming successful");
 		reportStatus(Response_Armed, millis);
 	}
@@ -184,6 +186,7 @@ void Controller::disarm(char reason, unsigned long millis)
 	Log.println("Controller::disarm: Attempting to Disarm");
 
 	firingMechanism->stopFiring();
+	sounder->silence();
 
 	if(state->disarm())
 	{
@@ -222,6 +225,7 @@ void Controller::testContinuity(unsigned long millis)
 
 		if(state->passContinuity())
 		{
+			sounder->passedContinuityTest();
 			reportStatus(Response_ContinuityPassed, millis);
 			Log.println("Controller::testContinuity: Continuity Test successful");
 			return;
@@ -247,6 +251,7 @@ void Controller::fire(unsigned long millis)
 		return;
 	}
 
+	sounder->firing();
 	firingStartedMillis = millis;
 	firingMechanism->fire();
 

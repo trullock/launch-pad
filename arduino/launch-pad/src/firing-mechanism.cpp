@@ -2,7 +2,7 @@
 #include <arduino.h>
 
 // https://chewett.co.uk/blog/1066/pin-numbering-for-wemos-d1-mini-esp8266/
-#define FiringWritePin 13 // D7
+#define FiringWritePin 12 // D6
 
 FiringMechanism::FiringMechanism()
 {
@@ -12,10 +12,10 @@ FiringMechanism::FiringMechanism()
 
 void FiringMechanism::fire()
 {
-	digitalWrite(FiringWritePin, LOW);
+	digitalWrite(FiringWritePin, HIGH);
 }
 
 void FiringMechanism::stopFiring()
 {
-	digitalWrite(FiringWritePin, HIGH);
+	digitalWrite(FiringWritePin, LOW);
 }

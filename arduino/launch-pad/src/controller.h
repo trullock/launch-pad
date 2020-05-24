@@ -7,6 +7,7 @@
 #include "IContinuityTester.h"
 #include "IFiringMechanism.h"
 #include "IStateObserver.h"
+#include "ISounder.h"
 #include "Logger.h"
 
 #define Response_InvalidCommand 'I'
@@ -30,7 +31,7 @@
 
 class Controller {
 	public:
-		Controller(ICommChannel *c, StateMachine *s, IContinuityTester* ct, IFiringMechanism* fm, IStateObserver* so);
+		Controller(ICommChannel *c, StateMachine *s, IContinuityTester* ct, IFiringMechanism* fm, IStateObserver* so, ISounder* sd);
 		void loop(unsigned long millis);
 	private:
 		ICommChannel* comms;
@@ -38,6 +39,7 @@ class Controller {
 		IContinuityTester* continuityTester;
 		IFiringMechanism* firingMechanism;
 		IStateObserver* stateObserver;
+		ISounder* sounder;
 
 		void arm(unsigned long millis);
 		void disarm(char reason, unsigned long millis);

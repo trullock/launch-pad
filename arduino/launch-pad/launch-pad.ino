@@ -2,6 +2,7 @@
 #include "src/continuity-tester.h"
 #include "src/firing-mechanism.h"
 #include "src/state-observer.h"
+#include "src/sounder.h"
 #include "src/wifi-comm-channel.h"
 
 Controller* controller;
@@ -16,8 +17,9 @@ void setup()
 	IFiringMechanism* firingMechanism = new FiringMechanism();
 	StateMachine* stateMachine = new StateMachine();
 	StateObserver* stateObserver = new StateObserver();
+	ISounder* sounder = new Sounder();
 
-	controller = new Controller(comms, stateMachine, continuityTester, firingMechanism, stateObserver);
+	controller = new Controller(comms, stateMachine, continuityTester, firingMechanism, stateObserver, sounder);
 }
 
 void loop()
