@@ -23,6 +23,8 @@
 #define Response_InterlockDisengaged 'L'
 #define Response_FiringMechanismEngaged 'M'
 #define Response_Beacon 'B'
+#define Response_Muted 'Q'
+#define Response_Unmuted 'W'
 
 #define CommandTimeoutMillis 20 * 1000
 #define FireDurationMillis 3 * 1000
@@ -31,7 +33,7 @@
 
 class Controller {
 	public:
-		Controller(ICommChannel *c, StateMachine *s, IContinuityTester* ct, IFiringMechanism* fm, IStateObserver* so, ISounder* sd);
+		Controller(ICommChannel *c, IContinuityTester *ct, IFiringMechanism *fm, IStateObserver *so, ISounder* sd);
 		void loop(unsigned long millis);
 	private:
 		ICommChannel* comms;
@@ -47,6 +49,9 @@ class Controller {
 		void fire(unsigned long millis);
 		void timeout(unsigned long millis);
 		void handleCommand(char command, unsigned long millis);
+
+		void mute(unsigned long millis);
+		void unmute(unsigned long millis);
 
 		void checkState(unsigned long millis);
 		bool haveTimedOut(unsigned long millis);

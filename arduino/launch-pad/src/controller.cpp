@@ -3,10 +3,10 @@
 
 #define RelayActuationMillis 50
 
-Controller::Controller(ICommChannel* c, StateMachine* s, IContinuityTester* ct, IFiringMechanism* fm, IStateObserver* so, ISounder* sd)
+Controller::Controller(ICommChannel *c, IContinuityTester *ct, IFiringMechanism *fm, IStateObserver *so, ISounder *sd)
 {
 	comms = c;
-	state = s;
+	state = new StateMachine();
 	continuityTester = ct;
 	firingMechanism = fm;
 	stateObserver = so;
@@ -105,6 +105,14 @@ void Controller::handleCommand(char command, unsigned long millis)
 
 		case Command_Fire:
 			fire(millis);
+			break;
+
+		case Command_Silence:
+			mute(millis);
+			break;
+
+		case Command_Loud:
+			unmute(millis);
 			break;
 
 		default:
@@ -260,4 +268,24 @@ void Controller::fire(unsigned long millis)
 
 	Log.println("Controller::fire: Firing initiation successful");
 	reportStatus(Response_Firing, millis);
+}
+
+void Controller::mute(unsigned long millis)
+{
+	Log.println("Controller::mute: Muting");
+
+	sounder->mute();
+
+	Log.println("Controller::mute: Muted");
+	reportStatus(Response_Muted, millis);
+}
+
+void Controller::unmute(unsigned long millis)
+{
+	Log.println("Controller::unmute: Louding");
+
+	sounder->unmute();
+
+	Log.println("Controller::unmute: Louded");
+	reportStatus(Response_Unmuted, millis);
 }

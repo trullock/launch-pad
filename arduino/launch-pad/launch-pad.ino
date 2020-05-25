@@ -15,11 +15,10 @@ void setup()
 	ICommChannel* comms = new WifiCommChannel();
 	IContinuityTester* continuityTester = new ContinuityTester();
 	IFiringMechanism* firingMechanism = new FiringMechanism();
-	StateMachine* stateMachine = new StateMachine();
 	StateObserver* stateObserver = new StateObserver();
 	ISounder* sounder = new Sounder();
 
-	controller = new Controller(comms, stateMachine, continuityTester, firingMechanism, stateObserver, sounder);
+	controller = new Controller(comms, continuityTester, firingMechanism, stateObserver, sounder);
 }
 
 void loop()

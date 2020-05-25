@@ -12,6 +12,14 @@ public:
 	virtual void armed();
 	virtual void passedContinuityTest();
 	virtual void firing();
+
+	virtual void mute();
+	virtual void unmute();
+
+	bool pinAMode;
+	bool pinBMode;
+	bool pinCMode;
+	bool muted;
 };
 
 #endif

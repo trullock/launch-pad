@@ -2,39 +2,82 @@
 #include <arduino.h>
 
 // https://chewett.co.uk/blog/1066/pin-numbering-for-wemos-d1-mini-esp8266/
-#define pinA 16 // D0
-#define pinB 14 // D5
-#define pinC 2 // D4
+#define pinA 0 // D3
+#define pinB 16 // D0
+#define pinC 14 // D5
+
 
 Sounder::Sounder()
 {
-	//pinMode(pinA, OUTPUT);
-	//pinMode(pinB, OUTPUT);
-	//pinMode(pinC, OUTPUT);
+	muted = false;
+
+	pinMode(pinA, OUTPUT);
+	pinMode(pinB, OUTPUT);
+	pinMode(pinC, OUTPUT);
+
 	silence();
 }
 
 void Sounder::silence()
 {
-	//digitalWrite(pinA, HIGH);
-	//digitalWrite(pinB, HIGH);
-	//digitalWrite(pinC, HIGH);
+	pinAMode = 1;
+	pinBMode = 1;
+	pinCMode = 1;
+
+	digitalWrite(pinA, HIGH);
+	digitalWrite(pinB, HIGH);
+	digitalWrite(pinC, HIGH);
 }
 
 void Sounder::armed()
 {
 	silence();
-	//digitalWrite(pinA, LOW);
+
+	pinAMode = 0;
+	if (!muted)
+		digitalWrite(pinA, LOW);
 }
 
 void Sounder::passedContinuityTest()
 {
 	silence();
-	//digitalWrite(pinB, LOW);
+
+	pinAMode = 0;
+	if (!muted)
+		digitalWrite(pinA, LOW);
+
+	pinBMode = 0;
+	if (!muted)
+		digitalWrite(pinB, LOW);
 }
 
 void Sounder::firing()
 {
 	silence();
-	//digitalWrite(pinC, LOW);
+
+	pinAMode = 0;
+	if(!muted)
+		digitalWrite(pinA, LOW);
+
+	pinCMode = 0;
+	if (!muted)
+		digitalWrite(pinC, LOW);
+}
+
+void Sounder::mute()
+{
+	muted = true;
+
+	digitalWrite(pinA, HIGH);
+	digitalWrite(pinB, HIGH);
+	digitalWrite(pinC, HIGH);
+}
+
+void Sounder::unmute()
+{
+	muted = false;
+
+	digitalWrite(pinA, pinAMode == 1 ? HIGH : LOW);
+	digitalWrite(pinB, pinBMode == 1 ? HIGH : LOW);
+	digitalWrite(pinC, pinCMode == 1 ? HIGH : LOW);
 }

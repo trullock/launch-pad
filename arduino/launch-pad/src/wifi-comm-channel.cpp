@@ -107,6 +107,12 @@ char WifiCommChannel::parseCommand(char *buffer)
 	if (strcmp("Fire", buffer) == 0)
 		return Command_Fire;
 
+	if (strcmp("Silence", buffer) == 0)
+		return Command_Silence;
+
+	if(strcmp("Loud", buffer) == 0)
+		return Command_Loud;
+
 	return Command_Null;
 }
 
