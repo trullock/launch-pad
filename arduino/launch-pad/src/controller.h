@@ -27,7 +27,7 @@
 #define Response_Unmuted 'W'
 
 #define CommandTimeoutMillis 20 * 1000
-#define FireDurationMillis 3 * 1000
+#define FireDurationMillis 5 * 1000
 
 #define ReportStatusBeaconIntervalMillis 250
 

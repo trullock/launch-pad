@@ -167,13 +167,14 @@ bool WifiCommChannel::checkTcpState(unsigned long millis)
 	}
 
 	// check for application layer TCP timeout
-	if (tcpClientConnected && lastTcpEventMillis + Wifi_Tcp_Connection_TimeoutMillis <= millis)
-	{
-		tcpClient.stop();
-		tcpClientConnected = false;
-	
-		Log.println("WifiCommChannel::checkTcpState: Application layer keepalive timeout");
-	}
+	// Disabled whilst cordova netcode is utter shite
+	//if (tcpClientConnected && lastTcpEventMillis + Wifi_Tcp_Connection_TimeoutMillis <= millis)
+	//{
+	//	tcpClient.stop();
+	//	tcpClientConnected = false;
+	//
+	//	Log.println("WifiCommChannel::checkTcpState: Application layer keepalive timeout");
+	//}
 
 	return tcpClientConnected;
 }
@@ -231,7 +232,7 @@ void WifiCommChannel::writeStatus(char response, Status state)
 	buffer[2] = state.interlockEngaged ? '1' : '0';
 	buffer[3] = state.firingMechanismEngaged ? '1' : '0';
 
-	int voltage = state.batteryVoltage * 100;
+	int voltage = state.batteryVoltage * 10;
 
 	buffer[4] = 48 + ((voltage / 100) % 100);
 	buffer[5] = 48 + ((voltage / 10) % 10);

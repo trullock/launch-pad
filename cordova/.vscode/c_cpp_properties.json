@@ -6,7 +6,12 @@
                 "C:\\Users\\Andrew Bullock\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
                 "C:\\Users\\Andrew Bullock\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\**"
             ],
-            "forcedInclude": []
+            "forcedInclude": [],
+            "intelliSenseMode": "msvc-x64",
+            "compilerPath": "C:\\mingw-w64\\i686-8.1.0-posix-dwarf-rt_v6-rev0\\mingw32\\bin\\gcc.exe",
+            "cStandard": "c11",
+            "cppStandard": "gnu++14"
         }
-    ]
+    ],
+    "version": 4
 }

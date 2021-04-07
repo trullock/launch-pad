@@ -35,7 +35,7 @@ var controller = (function(){
 				var state = str[1];
 				var interlockEngaged = str[2] == '1';
 				var firingMechanismEngaged = str[3] == '1';
-				var batteryVoltage = parseInt(str.substr(4, 3), 10) / 100.0;
+				var batteryVoltage = interlockEngaged ? parseInt(str.substr(4, 3), 10) / 10.0 : 0;
 
 				switch (event) {
 					case 'A':

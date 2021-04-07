@@ -115,7 +115,7 @@ var network = (function(){
 						return;
 					}
 
-					startTcpTimeout();
+					//startTcpTimeout();
 					resolve(result);
 				});
 			});

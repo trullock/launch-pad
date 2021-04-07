@@ -23,6 +23,10 @@
             {
               "xml": "<feature name=\"Serial\"><param name=\"android-package\" value=\"fr.drangies.cordova.serial.Serial\" /></feature>",
               "count": 1
+            },
+            {
+              "xml": "<feature name=\"SocketsForCordova\"><param name=\"android-package\" value=\"cz.blocshop.socketsforcordova.SocketPlugin\" /></feature>",
+              "count": 1
             }
           ],
           "/widget": [
@@ -70,6 +74,12 @@
                 "android:windowSoftInputMode": "adjustPan"
               }
             }
+          ],
+          "/manifest": [
+            {
+              "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
+              "count": 1
+            }
           ]
         }
       }
@@ -95,6 +105,12 @@
       "PACKAGE_NAME": "space.trullock_aero.launch_remote"
     },
     "cordova-plugin-serial": {
+      "PACKAGE_NAME": "space.trullock_aero.launch_remote"
+    },
+    "cordova-plugin-tcp-sockets": {
+      "PACKAGE_NAME": "space.trullock_aero.launch_remote"
+    },
+    "cz.blocshop.socketsforcordova": {
       "PACKAGE_NAME": "space.trullock_aero.launch_remote"
     }
   },
@@ -162,6 +178,22 @@
       "clobbers": [
         "window.serial"
       ]
+    },
+    {
+      "id": "cordova-plugin-tcp-sockets.Socket",
+      "file": "plugins/cordova-plugin-tcp-sockets/src/main.js",
+      "pluginId": "cordova-plugin-tcp-sockets",
+      "clobbers": [
+        "cordova.plugins.sockets"
+      ]
+    },
+    {
+      "id": "cz.blocshop.socketsforcordova.Socket",
+      "file": "plugins/cz.blocshop.socketsforcordova/socket.js",
+      "pluginId": "cz.blocshop.socketsforcordova",
+      "clobbers": [
+        "window.Socket"
+      ]
     }
   ],
   "plugin_metadata": {
@@ -171,6 +203,8 @@
     "cordova-plugin-chrome-apps-sockets-tcp": "1.3.7",
     "cordova-plugin-splashscreen": "5.0.3",
     "cordova-plugin-fingerprint-aio": "3.0.1",
-    "cordova-plugin-serial": "0.0.3"
+    "cordova-plugin-serial": "0.0.3",
+    "cordova-plugin-tcp-sockets": "1.1.0",
+    "cz.blocshop.socketsforcordova": "1.1.0"
   }
 }

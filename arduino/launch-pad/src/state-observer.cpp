@@ -26,7 +26,12 @@ bool StateObserver::firingMechanismEngaged()
 
 float StateObserver::batteryVoltage()
 {
-	long sensorValue = analogRead(A0);
-	float voltage = sensorValue * (3.2 / 1023.0);
+	float val = analogRead(A0);
+	
+	// y = 225(x - 10.6)
+	// x = 10.6 + (y / 225)
+
+	float voltage = (val / 225.0) + 10.6;
+
 	return voltage;
 }

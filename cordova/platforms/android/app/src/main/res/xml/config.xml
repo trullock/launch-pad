@@ -14,6 +14,9 @@
     <feature name="Serial">
         <param name="android-package" value="fr.drangies.cordova.serial.Serial" />
     </feature>
+    <feature name="SocketsForCordova">
+        <param name="android-package" value="cz.blocshop.socketsforcordova.SocketPlugin" />
+    </feature>
     <feature name="ChromeSocketsUdp">
         <param name="android-package" value="org.chromium.ChromeSocketsUdp" />
     </feature>
