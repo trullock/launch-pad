@@ -84,6 +84,10 @@ class CommandPage extends Page
 			me.disableAllButtons();
 		}
 
+		// Dont use bio authentication, its unnecessary and its practically annoying in the field.
+		doArm();
+		return;
+
 		Fingerprint.isAvailable(function () {
 			Fingerprint.show({ 
 				title: "Authentication Required",

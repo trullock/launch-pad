@@ -142,7 +142,8 @@ void Controller::checkState(unsigned long millis)
 	switch (currentState)
 	{
 		case State_ContinuityPassed:
-		case State_Firing:
+		// removed due to some ignitors not firing before continuity breaks
+		//case State_Firing:
 			if (!continuityTester->test())
 			{
 				Log.println("Controller::checkState: Continutity broken, disarming");
