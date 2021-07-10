@@ -3,7 +3,7 @@
 
 #define RelayActuationMillis 50
 
-Controller::Controller(ICommChannel *c, IContinuityTester *ct, IFiringMechanism *fm, IStateObserver *so, ISounder *sd)
+Controller::Controller(ICommChannel *c, IContinuityTester *ct, IFiringMechanism *fm, IStateObserver *so, ISounder *sd, IManualControl* mc)
 {
 	comms = c;
 	state = new StateMachine();
@@ -11,6 +11,7 @@ Controller::Controller(ICommChannel *c, IContinuityTester *ct, IFiringMechanism 
 	firingMechanism = fm;
 	stateObserver = so;
 	sounder = sd;
+	manualControl = mc;
 
 	lastCommandMillis = 0;
 	firingStartedMillis = 0;
@@ -20,33 +21,42 @@ void Controller::loop(unsigned long millis)
 {
 	comms->loop(millis);
 
-	if(!comms->isConnected() && state->getState() != State_Disarmed)
+	if(underManualControl)
 	{
-		Log.println("Controller::loop: Comms channel disconnected, disarming");
-		disarm(Response_CommChannelDisconnect, millis);
-		return;
+		checkState(millis);
+		checkManualControl(millis);
 	}
-	
-	checkState(millis);
-
-	if (haveTimedOut(millis))
+	else
 	{
-		Log.println("Controller::loop: Command timeout elapsed, disarming");
-		timeout(millis);
-		return;
+		if (!comms->isConnected() && state->getState() != State_Disarmed)
+		{
+			Log.println("Controller::loop: Comms channel disconnected, disarming");
+			disarm(Response_CommChannelDisconnect, millis);
+			return;
+		}
+
+		checkState(millis);
+
+		if (haveTimedOut(millis))
+		{
+			Log.println("Controller::loop: Command timeout elapsed, disarming");
+			timeout(millis);
+			return;
+		}
+
+		char command = comms->readCommand();
+		if (command == Command_Null)
+		{
+			reportStatusBeacon(millis);
+			return;
+		}
+
+		Log.print("Controller::loop: Handling command: ");
+		Log.println(command);
+
+		handleCommand(command, millis);
 	}
-
-	char command = comms->readCommand();
-	if(command == Command_Null)
-	{
-		reportStatusBeacon(millis);
-		return;
-	}
-
-	Log.print("Controller::loop: Handling command: ");
-	Log.println(command);
-
-	handleCommand(command, millis);
+		
 }
 
 bool Controller::haveTimedOut(unsigned long millis)
@@ -121,6 +131,44 @@ void Controller::handleCommand(char command, unsigned long millis)
 	}
 }
 
+void Controller::checkManualControl(unsigned long millis)
+{
+	char currentState = state->getState();
+	bool armButtonEvent = this->manualControl->armButtonEvent();
+	if (armButtonEvent == ButtonEvent_Engaged)
+	{
+		underManualControl = true;
+		
+		if(currentState == State_Disarmed)
+		{
+			arm(millis);
+			testContinuity(millis);
+		}
+		return;
+	}
+
+	if (armButtonEvent == ButtonEvent_Disengaged)
+	{
+		disarm(Response_Disarmed, millis);
+		return;
+	}
+
+	bool fireButtonEvent = this->manualControl->fireButtonEvent();
+	if (fireButtonEvent == ButtonEvent_Engaged)
+	{
+		if(currentState == State_ContinuityPassed)
+		{
+			fire(millis);
+		}
+		return;
+	}
+
+	if(fireButtonEvent == ButtonEvent_Disengaged)
+	{
+		disarm(Response_Disarmed, millis);
+	}
+}
+
 void Controller::checkState(unsigned long millis)
 {
 	char currentState = state->getState();
@@ -159,7 +207,7 @@ void Controller::checkState(unsigned long millis)
 	}
 
 	// check firing duration
-	if(currentState == State_Firing && firingStartedMillis + FireDurationMillis <= millis)
+	if(!underManualControl && currentState == State_Firing && firingStartedMillis + FireDurationMillis <= millis)
 	{
 		Log.println("Controller::checkState: Firing duration elapsed, disarming");
 		disarm(Response_Disarmed, millis);
@@ -180,6 +228,7 @@ void Controller::arm(unsigned long millis)
 	if(state->arm())
 	{
 		sounder->armed();
+		manualControl->arm();
 		Log.println("Controller::arm: Arming successful");
 		reportStatus(Response_Armed, millis);
 	}
@@ -195,6 +244,7 @@ void Controller::disarm(char reason, unsigned long millis)
 	Log.println("Controller::disarm: Attempting to Disarm");
 
 	firingMechanism->stopFiring();
+	firingStartedMillis = 0;
 	sounder->silence();
 
 	if(state->disarm())
@@ -240,7 +290,7 @@ void Controller::testContinuity(unsigned long millis)
 			return;
 		}
 
-		Log.println("Controller::testContinuity: Continuity Test unsuccessful, not a valid command in this state");
+		Log.println("Controller::testContinuity: State machine change to ContinuityPassed unsuccessful, disarming");
 		disarm(Response_Error, millis);
 		return;
 	}

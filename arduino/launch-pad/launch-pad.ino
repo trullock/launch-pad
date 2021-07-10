@@ -3,6 +3,7 @@
 #include "src/firing-mechanism.h"
 #include "src/state-observer.h"
 #include "src/sounder.h"
+#include "src/manual-control.h"
 #include "src/wifi-comm-channel.h"
 
 Controller* controller;
@@ -17,8 +18,9 @@ void setup()
 	IFiringMechanism* firingMechanism = new FiringMechanism();
 	StateObserver* stateObserver = new StateObserver();
 	ISounder* sounder = new Sounder();
+	IManualControl* manualControl = new ManualControl();
 
-	controller = new Controller(comms, continuityTester, firingMechanism, stateObserver, sounder);
+	controller = new Controller(comms, continuityTester, firingMechanism, stateObserver, sounder, manualControl);
 }
 
 void loop()
