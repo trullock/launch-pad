@@ -3,19 +3,17 @@
 
 #define RelayActuationMillis 50
 
-Controller::Controller(ICommChannel *c, IContinuityTester *ct, IFiringMechanism *fm, IStateObserver *so, ISounder *sd, IManualControl* mc)
+Controller::Controller(ICommChannel *c, IIO *io, IStateObserver *so, ISounder *sd)
 {
-	comms = c;
-	state = new StateMachine();
-	continuityTester = ct;
-	firingMechanism = fm;
-	stateObserver = so;
-	sounder = sd;
-	manualControl = mc;
+	this->comms = c;
+	this->state = new StateMachine();
+	this->io = io;
+	this->stateObserver = so;
+	this->sounder = sd;
 
-	lastCommandMillis = 0;
-	firingStartedMillis = 0;
-	underManualControl = false;
+	this->lastCommandMillis = 0;
+	this->firingStartedMillis = 0;
+	this->underManualControl = false;
 }
 
 void Controller::loop(unsigned long millis)
@@ -38,7 +36,7 @@ void Controller::loop(unsigned long millis)
 		return;
 	}
 
-	char command = this->manualControl->readCommand();
+	char command = this->io->readManualCommand();
 	if(command != Command_Null)
 		underManualControl = true;
 
@@ -156,7 +154,7 @@ void Controller::checkState(unsigned long millis)
 		case State_ContinuityPassed:
 		// removed due to some ignitors not firing before continuity breaks
 		//case State_Firing:
-			if (!continuityTester->test())
+			if (!io->testContinuity())
 			{
 				Log.println("Controller::checkState: Continutity broken, disarming");
 				disarm(Response_ContinuityFailed, millis);
@@ -206,7 +204,7 @@ void Controller::disarm(char reason, unsigned long millis)
 {
 	Log.println("Controller::disarm: Attempting to Disarm");
 
-	firingMechanism->stopFiring();
+	io->stopFiring();
 	firingStartedMillis = 0;
 	sounder->silence();
 
@@ -241,7 +239,7 @@ void Controller::testContinuity(unsigned long millis)
 		return;
 	}
 
-	if (continuityTester->test())
+	if (io->testContinuity())
 	{
 		Log.println("Controller::testContinuity: Continuity=true");
 
@@ -273,9 +271,9 @@ void Controller::fire(unsigned long millis)
 		return;
 	}
 
-	sounder->firing();
-	firingStartedMillis = millis;
-	firingMechanism->fire();
+	this->sounder->firing();
+	this->firingStartedMillis = millis;
+	this->io->fire();
 
 	// give the relay time to move
 	delay(RelayActuationMillis);

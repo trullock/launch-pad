@@ -4,11 +4,9 @@
 #include "commands.h"
 #include "ICommChannel.h"
 #include "state-machine.h"
-#include "IContinuityTester.h"
-#include "IFiringMechanism.h"
+#include "IIO.h"
 #include "IStateObserver.h"
 #include "ISounder.h"
-#include "IManualControl.h"
 #include "Logger.h"
 
 #define Response_InvalidCommand 'I'
@@ -34,16 +32,14 @@
 
 class Controller {
 	public:
-		Controller(ICommChannel *c, IContinuityTester *ct, IFiringMechanism *fm, IStateObserver *so, ISounder* sd, IManualControl* mc);
+		Controller(ICommChannel *c, IIO *io, IStateObserver *so, ISounder *sd);
 		void loop(unsigned long millis);
 	private:
 		ICommChannel* comms;
 		StateMachine* state;
-		IContinuityTester* continuityTester;
-		IFiringMechanism* firingMechanism;
+		IIO* io;
 		IStateObserver* stateObserver;
 		ISounder* sounder;
-		IManualControl *manualControl;
 
 		void arm(unsigned long millis);
 		void disarm(char reason, unsigned long millis);

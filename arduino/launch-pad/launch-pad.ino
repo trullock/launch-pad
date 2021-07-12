@@ -1,9 +1,7 @@
 #include "src/controller.h"
-#include "src/continuity-tester.h"
-#include "src/firing-mechanism.h"
+#include "src/io.h"
 #include "src/state-observer.h"
 #include "src/sounder.h"
-#include "src/manual-control.h"
 #include "src/wifi-comm-channel.h"
 
 Controller* controller;
@@ -14,13 +12,11 @@ void setup()
 
 	
 	ICommChannel* comms = new WifiCommChannel();
-	IContinuityTester* continuityTester = new ContinuityTester();
-	IFiringMechanism* firingMechanism = new FiringMechanism();
+	IIO* io = new IO();
 	StateObserver* stateObserver = new StateObserver();
 	ISounder* sounder = new Sounder();
-	IManualControl* manualControl = new ManualControl();
 
-	controller = new Controller(comms, continuityTester, firingMechanism, stateObserver, sounder, manualControl);
+	controller = new Controller(comms, io, stateObserver, sounder);
 }
 
 void loop()
