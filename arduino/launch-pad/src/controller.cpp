@@ -15,48 +15,50 @@ Controller::Controller(ICommChannel *c, IContinuityTester *ct, IFiringMechanism 
 
 	lastCommandMillis = 0;
 	firingStartedMillis = 0;
+	underManualControl = false;
 }
 
 void Controller::loop(unsigned long millis)
 {
 	comms->loop(millis);
 
-	if(underManualControl)
+	if (!underManualControl && !comms->isConnected() && state->getState() != State_Disarmed)
 	{
-		checkState(millis);
-		checkManualControl(millis);
+		Log.println("Controller::loop: Comms channel disconnected, disarming");
+		disarm(Response_CommChannelDisconnect, millis);
+		return;
 	}
-	else
+
+	checkState(millis);
+
+	if (!underManualControl && haveTimedOut(millis))
 	{
-		if (!comms->isConnected() && state->getState() != State_Disarmed)
-		{
-			Log.println("Controller::loop: Comms channel disconnected, disarming");
-			disarm(Response_CommChannelDisconnect, millis);
-			return;
-		}
-
-		checkState(millis);
-
-		if (haveTimedOut(millis))
-		{
-			Log.println("Controller::loop: Command timeout elapsed, disarming");
-			timeout(millis);
-			return;
-		}
-
-		char command = comms->readCommand();
-		if (command == Command_Null)
-		{
-			reportStatusBeacon(millis);
-			return;
-		}
-
-		Log.print("Controller::loop: Handling command: ");
-		Log.println(command);
-
-		handleCommand(command, millis);
+		Log.println("Controller::loop: Command timeout elapsed, disarming");
+		timeout(millis);
+		return;
 	}
-		
+
+	char command = this->manualControl->readCommand();
+	if(command != Command_Null)
+		underManualControl = true;
+
+	if(!underManualControl)
+		command = comms->readCommand();
+
+	if (command == Command_Null)
+	{
+		reportStatusBeacon(millis);
+		return;
+	}
+
+	Log.print("Controller::loop: Handling command: ");
+	Log.println(command);
+
+	handleCommand(command, millis);
+
+	// this hack stinks
+	if(underManualControl && command == Command_Arm)
+		handleCommand(Command_TestContinuity, millis);
 }
 
 bool Controller::haveTimedOut(unsigned long millis)
@@ -131,44 +133,6 @@ void Controller::handleCommand(char command, unsigned long millis)
 	}
 }
 
-void Controller::checkManualControl(unsigned long millis)
-{
-	char currentState = state->getState();
-	bool armButtonEvent = this->manualControl->armButtonEvent();
-	if (armButtonEvent == ButtonEvent_Engaged)
-	{
-		underManualControl = true;
-		
-		if(currentState == State_Disarmed)
-		{
-			arm(millis);
-			testContinuity(millis);
-		}
-		return;
-	}
-
-	if (armButtonEvent == ButtonEvent_Disengaged)
-	{
-		disarm(Response_Disarmed, millis);
-		return;
-	}
-
-	bool fireButtonEvent = this->manualControl->fireButtonEvent();
-	if (fireButtonEvent == ButtonEvent_Engaged)
-	{
-		if(currentState == State_ContinuityPassed)
-		{
-			fire(millis);
-		}
-		return;
-	}
-
-	if(fireButtonEvent == ButtonEvent_Disengaged)
-	{
-		disarm(Response_Disarmed, millis);
-	}
-}
-
 void Controller::checkState(unsigned long millis)
 {
 	char currentState = state->getState();
@@ -228,7 +192,6 @@ void Controller::arm(unsigned long millis)
 	if(state->arm())
 	{
 		sounder->armed();
-		manualControl->arm();
 		Log.println("Controller::arm: Arming successful");
 		reportStatus(Response_Armed, millis);
 	}

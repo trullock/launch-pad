@@ -6,15 +6,17 @@
 
 class ManualControl : public IManualControl
 {
-public:
-	ManualControl();
-	~ManualControl() {}
-	virtual bool arm();
+	bool lastArmState = false;
+	bool lastFireState = false;
+
 	virtual int armButtonEvent();
 	virtual int fireButtonEvent();
 
-	bool lastArmState = false;
-	bool lastFireState = false;
+public:
+	ManualControl();
+	~ManualControl() {}
+
+	virtual char readCommand();
 };
 
 #endif

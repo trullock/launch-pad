@@ -44,7 +44,6 @@ class Controller {
 		IStateObserver* stateObserver;
 		ISounder* sounder;
 		IManualControl *manualControl;
-		bool underManualControl = false;
 
 		void arm(unsigned long millis);
 		void disarm(char reason, unsigned long millis);
@@ -56,7 +55,6 @@ class Controller {
 		void mute(unsigned long millis);
 		void unmute(unsigned long millis);
 
-		void checkManualControl(unsigned long millis);
 		void checkState(unsigned long millis);
 		bool haveTimedOut(unsigned long millis);
 
@@ -66,6 +64,7 @@ class Controller {
 		unsigned long lastReportMillis;
 		unsigned long lastCommandMillis;
 		unsigned long firingStartedMillis;
+		bool underManualControl;
 };
 
 #endif

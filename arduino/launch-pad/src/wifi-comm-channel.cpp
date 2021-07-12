@@ -2,9 +2,6 @@
 #include "local-wifi-creds.h"
 #include "commands.h"
 
-// https://chewett.co.uk/blog/1066/pin-numbering-for-wemos-d1-mini-esp8266/
-#define ConnectedLEDPin 2 // D4
-
 WifiCommChannel::WifiCommChannel()
 {
 	tcp = new WiFiServer(4321);
@@ -20,8 +17,6 @@ WifiCommChannel::WifiCommChannel()
 	lastTcpEventMillis = 0;
 
 	WiFiClient::setDefaultNoDelay(true);
-
-	pinMode(ConnectedLEDPin, OUTPUT);
 }
 
 void WifiCommChannel::setConnectionDetails(WifiCredentials* creds)
@@ -37,7 +32,6 @@ void WifiCommChannel::loop(unsigned long millis)
 	{
 		case Wifi_State_Disconnected:
 			Log.println("WifiCommChannel::loop: Disconnected, connecting");
-			digitalWrite(ConnectedLEDPin, HIGH); // its backwards
 			connect(millis);
 			break;
 
@@ -46,7 +40,6 @@ void WifiCommChannel::loop(unsigned long millis)
 			{
 				Log.println("WifiCommChannel::loop: Connecting, connected");
 				state = Wifi_State_Connected;
-				digitalWrite(ConnectedLEDPin, LOW); // its backwards
 				tcp->begin();
 				lastEventMillis = millis;
 				break;

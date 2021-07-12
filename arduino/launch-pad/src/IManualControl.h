@@ -8,9 +8,7 @@
 class IManualControl {
   public:
 	  virtual ~IManualControl(){};
-	  virtual bool arm() = 0;
-	  virtual int armButtonEvent() = 0;
-	  virtual int fireButtonEvent() = 0;
+	  virtual char readCommand() = 0;
 };
 
 #endif

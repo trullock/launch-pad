@@ -1,5 +1,6 @@
 #include "manual-control.h"
 #include <arduino.h>
+#include "commands.h"
 
 // https://chewett.co.uk/blog/1066/pin-numbering-for-wemos-d1-mini-esp8266/
 #define ArmEngagedReadPin 2 // D4
@@ -10,10 +11,30 @@ ManualControl::ManualControl()
 	pinMode(ArmEngagedReadPin, INPUT_PULLUP);
 }
 
-bool ManualControl::arm()
+char ManualControl::readCommand()
 {
-	// don't do this in the ctor, otherwise we can never talk over serial as this uses the RX pin
-	pinMode(FireEngagedReadPin, INPUT);
+	int armEvent = this->armButtonEvent();
+
+	if(armEvent == ButtonEvent_Engaged)
+	{
+		// don't do this in the ctor, otherwise we can never talk over serial as this uses the RX pin
+		pinMode(FireEngagedReadPin, INPUT);
+
+		return Command_Arm;
+	}
+
+	if(armEvent == ButtonEvent_Disengaged)
+		return Command_Disarm;
+
+	int fireEvent = this->fireButtonEvent();
+
+	if(fireEvent == ButtonEvent_Engaged)
+		return Command_Fire;
+
+	if(fireEvent == ButtonEvent_Disengaged);
+		return Command_Disarm;
+
+	return Command_Null;
 }
 
 int ManualControl::armButtonEvent()
