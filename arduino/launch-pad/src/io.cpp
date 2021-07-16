@@ -21,7 +21,11 @@ IO::IO()
 	digitalWrite(ContinuityWritePin, LOW);
 
 	pinMode(ContinuityReadPin, INPUT);
+
 	pinMode(ArmEngagedReadPin, INPUT_PULLUP);
+	// https://www.esp8266.com/wiki/doku.php?id=esp8266_gpio_pin_allocations
+	pinMode(FireEngagedReadPin, FUNCTION_3);
+	pinMode(FireEngagedReadPin, INPUT_PULLUP);
 
 	pinMode(FiringWritePin, OUTPUT);
 	stopFiring();
@@ -32,12 +36,7 @@ char IO::readManualCommand()
 	int armEvent = this->armButtonEvent();
 
 	if (armEvent == ButtonEvent_Engaged)
-	{
-		// don't do this in the ctor, otherwise we can never talk over serial as this uses the RX pin
-		pinMode(FireEngagedReadPin, INPUT);
-
 		return Command_Arm;
-	}
 
 	if (armEvent == ButtonEvent_Disengaged)
 		return Command_Disarm;
@@ -78,14 +77,14 @@ int IO::armButtonEvent()
 int IO::fireButtonEvent()
 {
 	int result = digitalRead(FireEngagedReadPin);
-	bool engaged = result == 1;
+	bool engaged = result == 0; // pullup mode
 
 	if (engaged != lastFireState)
 	{
 		// crude debounce
 		delay(50);
-		result = digitalRead(ArmEngagedReadPin);
-		engaged = result == 1;
+		result = digitalRead(FireEngagedReadPin);
+		engaged = result == 0; // pullup mode
 	}
 
 	if (engaged != lastFireState)

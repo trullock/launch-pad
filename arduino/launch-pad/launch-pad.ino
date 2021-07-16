@@ -8,9 +8,8 @@ Controller* controller;
 
 void setup()
 {
-	Serial.begin(115200);
+	Serial.begin(115200, SERIAL_8N1, SERIAL_TX_ONLY);
 
-	
 	ICommChannel* comms = new WifiCommChannel();
 	IIO* io = new IO();
 	StateObserver* stateObserver = new StateObserver();
