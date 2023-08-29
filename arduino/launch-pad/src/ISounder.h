@@ -9,9 +9,6 @@ public:
 	virtual void armed() = 0;
 	virtual void passedContinuityTest() = 0;
 	virtual void firing() = 0;
-
-	virtual void mute() = 0;
-	virtual void unmute() = 0;
 };
 
 #endif

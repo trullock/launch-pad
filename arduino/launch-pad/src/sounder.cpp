@@ -9,8 +9,6 @@
 
 Sounder::Sounder()
 {
-	muted = false;
-
 	pinMode(pinA, OUTPUT);
 	pinMode(pinB, OUTPUT);
 	pinMode(pinC, OUTPUT);
@@ -34,8 +32,7 @@ void Sounder::armed()
 	silence();
 
 	pinAMode = 0;
-	if (!muted)
-		digitalWrite(pinA, LOW);
+	digitalWrite(pinA, LOW);
 }
 
 void Sounder::passedContinuityTest()
@@ -43,12 +40,10 @@ void Sounder::passedContinuityTest()
 	silence();
 
 	pinAMode = 0;
-	if (!muted)
-		digitalWrite(pinA, LOW);
+	digitalWrite(pinA, LOW);
 
 	pinBMode = 0;
-	if (!muted)
-		digitalWrite(pinB, LOW);
+	digitalWrite(pinB, LOW);
 }
 
 void Sounder::firing()
@@ -56,28 +51,8 @@ void Sounder::firing()
 	silence();
 
 	pinAMode = 0;
-	if(!muted)
-		digitalWrite(pinA, LOW);
+	digitalWrite(pinA, LOW);
 
 	pinCMode = 0;
-	if (!muted)
-		digitalWrite(pinC, LOW);
-}
-
-void Sounder::mute()
-{
-	muted = true;
-
-	digitalWrite(pinA, HIGH);
-	digitalWrite(pinB, HIGH);
-	digitalWrite(pinC, HIGH);
-}
-
-void Sounder::unmute()
-{
-	muted = false;
-
-	digitalWrite(pinA, pinAMode == 1 ? HIGH : LOW);
-	digitalWrite(pinB, pinBMode == 1 ? HIGH : LOW);
-	digitalWrite(pinC, pinCMode == 1 ? HIGH : LOW);
+	digitalWrite(pinC, LOW);
 }
