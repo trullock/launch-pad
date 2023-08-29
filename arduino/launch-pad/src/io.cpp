@@ -47,7 +47,7 @@ char IO::readManualCommand()
 		return Command_Fire;
 
 	if (fireEvent == ButtonEvent_Disengaged)
-		return Command_Disarm;
+		return Command_StopFiring;
 
 	return Command_Null;
 }
@@ -98,27 +98,24 @@ int IO::fireButtonEvent()
 
 bool IO::testContinuity()
 {
-	// disable continuity testing for now
-	return true;
+	digitalWrite(ContinuityWritePin, HIGH);
+	delay(10);
+	int result1 = analogRead(ContinuityReadPin);
+	delay(5);
+	int result2 = analogRead(ContinuityReadPin);
+	delay(5);
+	int result3 = analogRead(ContinuityReadPin);
 
-	// digitalWrite(ContinuityWritePin, HIGH);
-	// delay(10);
-	// int result1 = analogRead(ContinuityReadPin);
-	// delay(5);
-	// int result2 = analogRead(ContinuityReadPin);
-	// delay(5);
-	// int result3 = analogRead(ContinuityReadPin);
+	digitalWrite(ContinuityWritePin, LOW);
 
-	// digitalWrite(ContinuityWritePin, LOW);
+	long total = result1 + result2 + result3;
+	float average = total / 3;
 
-	// long total = result1 + result2 + result3;
-	// float average = total / 3;
+	Serial.println(average);
 
-	// Serial.println(average);
-
-	// // circuit has a 1K-1K voltage divider, so ~500 means we have continiuty.
-	// // > ~500 means we're open circuit, so make it 600 for some buffer space.
-	// return average < 600;
+	// circuit has a 1K-1K voltage divider, so ~500 means we have continiuty.
+	// > ~500 means we're open circuit, so make it 600 for some buffer space.
+	return average < 600;
 }
 
 void IO::fire()

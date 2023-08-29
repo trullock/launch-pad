@@ -1,13 +1,12 @@
 #include "controller.h"
 #include "status.h"
+#include "states.h"
 
 #define RelayActuationMillis 50
 
-Controller::Controller(IIO *io, IStateObserver *so, ISounder *sd)
+Controller::Controller(IIO *io, ISounder *sd)
 {
-	this->state = new StateMachine();
 	this->io = io;
-	this->stateObserver = so;
 	this->sounder = sd;
 
 	this->lastCommandMillis = 0;
@@ -16,7 +15,8 @@ Controller::Controller(IIO *io, IStateObserver *so, ISounder *sd)
 
 void Controller::loop(unsigned long millis)
 {
-	checkState(millis);
+	if(this->armed)
+		testContinuity(millis);
 
 	char command = this->io->readManualCommand();
 
@@ -27,10 +27,6 @@ void Controller::loop(unsigned long millis)
 	Log.println(command);
 
 	handleCommand(command, millis);
-
-	// this hack stinks
-	if(command == Command_Arm)
-		handleCommand(Command_TestContinuity, millis);
 }
 
 
@@ -55,44 +51,10 @@ void Controller::handleCommand(char command, unsigned long millis)
 		case Command_Fire:
 			fire(millis);
 			break;
-	}
-}
 
-void Controller::checkState(unsigned long millis)
-{
-	char currentState = state->getState();
-
-	// check interlock status
-	switch (currentState)
-	{
-		case State_Armed:
-		case State_ContinuityPassed:
-		case State_Firing:
-			if (!stateObserver->interlockEngaged())
-			{
-				Log.println("Controller::checkState: Interlock disengaged in required state, disarming");
-				disarm(millis);
-			}
-	}
-
-	// check continuity status
-	switch (currentState)
-	{
-		case State_ContinuityPassed:
-		// removed due to some ignitors not firing before continuity breaks
-		//case State_Firing:
-			if (!io->testContinuity())
-			{
-				Log.println("Controller::checkState: Continutity broken, disarming");
-				disarm(millis);
-			}
-	}
-
-	// check firing status
-	if (currentState != State_Firing && stateObserver->firingMechanismEngaged())
-	{
-		Log.println("Controller::checkState: Firing mechanism enabled in unexpected state, disarming");
-		disarm(millis);
+		case Command_StopFiring:
+			stopFiring(millis);
+			break;
 	}
 }
 
@@ -100,22 +62,10 @@ void Controller::arm(unsigned long millis)
 {
 	Log.println("Controller::arm: Attempting to Arm");
 
-	if (!stateObserver->interlockEngaged())
-	{
-		Log.println("Controller::arm: Cannot arm, interlock not engaged. Disarming");
-		disarm(millis);
-		return;
-	}
-
-	if(state->arm())
-	{
-		sounder->armed();
-		Log.println("Controller::arm: Arming successful");
-	}
-	else
-	{
-		Log.println("Controller::arm: Arming unsuccessful, not a valid command in this state");
-	}
+	this->armed = true;
+	this->firing = false;
+	sounder->armed();
+	Log.println("Controller::arm: Arming successful");
 }
 
 void Controller::disarm(unsigned long millis)
@@ -126,57 +76,72 @@ void Controller::disarm(unsigned long millis)
 	firingStartedMillis = 0;
 	sounder->silence();
 
-	if(state->disarm())
-		Log.println("Controller::disarm: Disarm successful");
-	else
-		Log.println("Controller::disarm: Disarm unsuccessful, not a valid command in this state");
+	this->armed = false;
+	this->firing = false;
+
+	Log.println("Controller::disarm: Disarm successful");
 }
 
 void Controller::testContinuity(unsigned long millis)
 {
-	Log.println("Controller::testContinuity: Attempting to Test Continuity");
+	// dont bother whilst firing
+	if(this->firing)
+		return;
 
-	if(!state->canTestContinuity())
+	//Log.println("Controller::testContinuity: Attempting to Test Continuity");
+
+	if(!this->armed)
 	{
-		disarm(millis);
-		Log.println("Controller::testContinuity: Testing unsuccessful, not a valid command in this state");
+		Log.println("Controller::testContinuity: Testing unsuccessful, not armed");
 		return;
 	}
 
 	if (io->testContinuity())
 	{
-		Log.println("Controller::testContinuity: Continuity=true");
+		//Log.println("Controller::testContinuity: Continuity=true");
 
-		if(state->passContinuity())
-		{
-			sounder->passedContinuityTest();
-			Log.println("Controller::testContinuity: Continuity Test successful");
-			return;
-		}
-
-		Log.println("Controller::testContinuity: State machine change to ContinuityPassed unsuccessful, disarming");
-		disarm(millis);
+		sounder->passedContinuityTest();
+		//Log.println("Controller::testContinuity: Continuity Test successful");
 		return;
 	}
 
-	disarm(millis);
-	Log.println("Controller::testContinuity: Continuity Test failed, disarming");
+	sounder->armed();
+	//Log.println("Controller::testContinuity: Continuity Test failed");
 }
 
 void Controller::fire(unsigned long millis)
 {
 	Log.println("Controller::fire: Attempting to Fire");
 
-	if(!state->fire())
+	if(!this->armed)
 	{
 		Log.println("Controller::fire: Firing initiation unsuccessful, not a valid command in this state");
 		disarm(millis);
 		return;
 	}
 
+	this->firing = true;
 	this->sounder->firing();
 	this->firingStartedMillis = millis;
 	this->io->fire();
 
 	Log.println("Controller::fire: Firing initiation successful");
+}
+
+void Controller::stopFiring(unsigned long millis)
+{
+	Log.println("Controller::stopFiring: Attempting to Stop Fire");
+
+	if(!armed)
+	{
+		Log.println("Controller::stopFiring: Can't stop firing, not armed");
+		return;
+	}
+
+	this->firing = false;
+	this->sounder->armed();
+	this->firingStartedMillis = 0;
+	this->io->stopFiring();
+
+	Log.println("Controller::stopFiring: Stop-Firing initiation successful");
 }
